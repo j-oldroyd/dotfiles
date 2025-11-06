@@ -254,16 +254,16 @@
             "keyIcon": "",
             "key": "│{#magenta}│ {icon}  Login     │{$4}│{#keys}│{$2}"
         },
-        {
-            "condition": {                                    // Conditional module: only show on non-macOS
-                "!system": "macOS"
-            },
-            "type": "disk",
-            "keyIcon": "",
-            "key": "│{#magenta}│ {icon}  OS Age    │{$4}│{#keys}│{$2}",
-            "folders": "/",                                   // Check root filesystem
-            "format": "{create-time:10} [{days} days]"        // Show creation time and age in days
-        },
+        // {
+        //     "condition": {                                    // Conditional module: only show on non-macOS
+        //         "!system": "macOS"
+        //     },
+        //     "type": "disk",
+        //     "keyIcon": "",
+        //     "key": "│{#magenta}│ {icon}  OS Age    │{$4}│{#keys}│{$2}",
+        //     "folders": "/",                                   // Check root filesystem
+        //     "format": "{create-time:10} [{days} days]"        // Show creation time and age in days
+        // },
         {
             "condition": {                                    // Conditional module: only show on macOS
                 "system": "macOS"
@@ -285,9 +285,9 @@
             "format": ""
         },
 
-        // End with color palette and line break
-        "break",                                             // Add a blank line
-        "colors"                                             // Display color palette
+        // // End with color palette and line break
+        // "break",                                             // Add a blank line
+        // "colors"                                             // Display color palette
     ]
 }
 
