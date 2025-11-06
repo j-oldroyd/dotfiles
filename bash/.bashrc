@@ -4,7 +4,9 @@
 # emacs --daemon
 # Now it seems to be working...
 
-eval "$(ssh-agent -s)"
+# ssh-agent should be taken care of by systemctl now
+#eval "$(ssh-agent -s)"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 ssh-add ~/.ssh/github
 
 fastfetch
