@@ -6,5 +6,5 @@ export MANPATH=/usr/local/texlive/2025/texmf-dist/doc/man:$MANPATH
 export INFOPATH=/usr/local/texlive/2025/texmf-dist/doc/info:$INFOPATH
 export PATH=/usr/local/texlive/2025/bin/x86_64-linux:$PATH
 
-export VISUAL='emacsclient -c -a ""'
+export VISUAL='emacsclient -c -n -a ""'
 export EDITOR="$VISUAL"
