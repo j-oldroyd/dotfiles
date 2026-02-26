@@ -3,7 +3,9 @@ eval "$(starship init zsh)"
 # Use ls from coreutils for GNU flavor
 alias ls='gls -lhF --group-directories-first --color=auto'
 
-alias emacs='$(/Applications/Emacs.app/Contents/MacOS/Emacs)'
+# Use emacsclient for Emacs.  On macOS, Homebrew starts the emacs-plus service
+# at launch.
+alias emacs='$(/Applications/Emacs Client.app/Contents/MacOS/droplet)'
 export EDITOR="emacs -nw"
 
 export PATH=$PATH:$HOME/ledger/
