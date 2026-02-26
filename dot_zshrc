@@ -5,8 +5,8 @@ alias ls='gls -lhF --group-directories-first --color=auto'
 
 # Use emacsclient for Emacs.  On macOS, Homebrew starts the emacs-plus service
 # at launch.
-alias emacs='/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c'
-export EDITOR="emacs -nw"
+# alias emacs='/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c'
+export VISUAL="emacsclient -c -nw"
 
 export PATH=$PATH:$HOME/ledger/
 export PATH=$PATH:/Applications/MATLAB_R2024b.app/bin
