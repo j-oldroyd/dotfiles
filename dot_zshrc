@@ -1,0 +1,14 @@
+eval "$(starship init zsh)"
+
+# Use ls from coreutils for GNU flavor
+alias ls='gls -lhF --group-directories-first --color=auto'
+
+alias emacs='$(/Applications/Emacs.app/Contents/MacOS/Emacs)'
+export EDITOR="emacs -nw"
+
+export PATH=$PATH:$HOME/ledger/
+export PATH=$PATH:/Applications/MATLAB_R2024b.app/bin
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
+eval "$(pyenv virtualenv-init -)"
