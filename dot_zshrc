@@ -5,7 +5,7 @@ alias ls='gls -lhF --group-directories-first --color=auto'
 
 # Use emacsclient for Emacs.  On macOS, Homebrew starts the emacs-plus service
 # at launch.
-alias emacs='$(/Applications/Emacs Client.app/Contents/MacOS/droplet)'
+alias emacs='/opt/homebrew/opt/emacs-plus@31/bin/emacsclient -c'
 export EDITOR="emacs -nw"
 
 export PATH=$PATH:$HOME/ledger/
