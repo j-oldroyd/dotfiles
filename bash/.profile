@@ -2,9 +2,9 @@
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1000/bus"
 
-export MANPATH=/usr/local/texlive/2025/texmf-dist/doc/man:$MANPATH
-export INFOPATH=/usr/local/texlive/2025/texmf-dist/doc/info:$INFOPATH
-export PATH=/usr/local/texlive/2025/bin/x86_64-linux:$PATH
+export MANPATH=/usr/local/texlive/2026/texmf-dist/doc/man:$MANPATH
+export INFOPATH=/usr/local/texlive/2026/texmf-dist/doc/info:$INFOPATH
+export PATH=/usr/local/texlive/2026/bin/x86_64-linux:$PATH
 
 export VISUAL='emacsclient -c -n -a ""'
 export EDITOR="$VISUAL"
@@ -13,7 +13,3 @@ export EDITOR="$VISUAL"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - bash)"
-
-# RubyGem settings
-export GEM_HOME="$(gem env user_gemhome)"
-export PATH="$PATH:$GEM_HOME/bin"
