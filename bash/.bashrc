@@ -17,3 +17,6 @@ eval "$(pyenv virtualenv-init -)"
 alias spyder=/home/joldroyd/.local/spyder-6/envs/spyder-runtime/bin/spyder
 alias uninstall-spyder=/home/joldroyd/.local/spyder-6/uninstall-spyder.sh
 # <<< Added by Spyder <<<
+
+# direnv hook
+eval "$(direnv hook bash)"
