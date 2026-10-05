@@ -12,3 +12,11 @@ export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - bash)"
 eval "$(pyenv virtualenv-init -)"
+
+# >>> Added by Spyder >>>
+alias spyder=/home/joldroyd/.local/spyder-6/envs/spyder-runtime/bin/spyder
+alias uninstall-spyder=/home/joldroyd/.local/spyder-6/uninstall-spyder.sh
+# <<< Added by Spyder <<<
+
+# direnv hook
+eval "$(direnv hook bash)"

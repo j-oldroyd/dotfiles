@@ -8,3 +8,6 @@ fi
 if [ -f ~/.bashrc ]; then
     . ~/.bashrc
 fi
+
+# Added by `rbenv init` on Sat Apr 25 09:44:55 AM EDT 2026
+eval "$(rbenv init - --no-rehash bash)"
