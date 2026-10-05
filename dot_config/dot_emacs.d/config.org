@@ -1,0 +1,26 @@
+#+TITLE: Jesse Illiterate's Emacs Configuration
+
+This is an Emacs configuration centered around helping me to perform my daily
+duties as a mathematics professor.  As such, this configuration contains tools
+for performing the following tasks:
+- producing academic documents, including notes and assignments;
+- taking minutes in meetings;
+- completing assessments;
+- tracking research.
+
+[[https://en.wikipedia.org/wiki/AUCTeX][AUCTeX]] is the primary tool I use for producing academic documents, and so
+compatibility with this package is essential.  Supporting packages include
+[[https://github.com/cdominik/cdlatex][CDLaTeX]] (for \( \LaTeX{} \) abbreviations), [[https://github.com/emacs-citar/citar][Citar]] (for bibliography management)
+and [[https://www.orgroam.com/][Org-roam]] (for linked note-taking).
+
+My responsibilities as an academic go beyond just writing notes and homework
+assignments, so I also use Emacs to help in other areas. [[https://orgmode.org/][Org mode]] is what I use
+for taking minutes in meetings and acts as the foundation of several other tools
+in my workflow (including Org-roam).  Org mode has an agenda system that is very
+useful for tracking tasks, and I use a variant based on the "Getting Things
+Done" system (or GTD) called [[https://github.com/Trevoke/org-gtd.el][org-gtd]].
+
+Of course, before I can start using these tools I need to configure Emacs
+itself.  Much of that configuration is taken from James Cherti's [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]]
+project and Ashton Wiersdorf's [[https://codeberg.org/ashton314/emacs-bedrock][Emacs Bedrock]] starter kit.  Much of this will
+also be taken from an earlier [[https://github.com/j-oldroyd/emacs-prelude-config][configuration of mine]] based on [[https://prelude.emacsredux.com/][Emacs Prelude]].
