@@ -46,6 +46,10 @@ in =.emacs.d/=.
 *** Variables of note:
 - =minimal-emacs-ui-features=: set basic features of the UI.
 
+** =pre-init=
+This file contains code for using Elpaca instead of the built-in package
+manager.
+
 ** =post-init.el=
 
 This file contains packages for improving base functionalities of Emacs (such as
@@ -87,6 +91,11 @@ completion an undo/redo).  This is also where the theme is set.
 - =quick-sdcv=: provides offline dictionary.  This requires the third-part
   =sdcv= tool.  Dictionaries can be downloaded from [[http://download.huzheng.org/][this website]].
 - =server=: provides settings for =emacsclient=.
+- =elec-pair=: automatic insertion of matching parentheses, etc.
+- =which-key=: help for keybinding completions.
+- =git-modes=: support for Git files.
+- =sgml-mode=: support for SGML files.  Note that =nxml-mode= is a derivative of
+  =sgml-mode=.
 
 *** Variables of note:
 - =auto-save-*=: settings for using =auto-save-mode=.
@@ -97,6 +106,8 @@ completion an undo/redo).  This is also where the theme is set.
 - =tab-bar-show=: controls when tab bar appears.
 - =quick-sdcv-dictionary-data-dir=: controls where dictionaries are to be found
   (if not downloaded to =/usr/share/stardict/dic/=).
+- =display-line-numbers-type=: set to =relative=.
+- =dired-omit-files=: control appearance of filetypes in =dired= buffers.
 
 *** Keybindings of note:
 - =C-z= is unset from its default of =suspend-frame= and now applies to

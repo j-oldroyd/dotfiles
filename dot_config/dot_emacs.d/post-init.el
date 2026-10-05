@@ -893,5 +893,247 @@
   ;; initializing
   (add-hook 'emacs-startup-hook #'my-server-start))
 
+;;; Enable automatic insertion and management of matching pairs of characters
+;;; (e.g., (), {}, "") globally using `electric-pair-mode'.
+(use-package elec-pair
+  :ensure nil
+  :init
+  (electric-pair-mode 1))
+
+;; Set the fringes to match the pixel height of a character. This ensures the
+;; fringe is wide enough, scaling dynamically with the current font size.
+(fringe-mode (frame-char-width))
+
+;; When Delete Selection mode is enabled, typed text replaces the selection
+;; if the selection is active.
+(delete-selection-mode 1)
+
+;; Display the current line and column numbers in the mode line
+(setq line-number-mode t)
+(setq column-number-mode t)
+(setq mode-line-position-column-line-format '("%l:%C"))
+
+;; Display of line numbers in the buffer:
+;; Read: https://www.jamescherti.com/emacs-display-line-numbers-mode-performance/
+(setq-default display-line-numbers-type 'relative)
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook #'display-line-numbers-mode))
+
+;; Set the maximum level of syntax highlighting for Tree-sitter modes
+(setq treesit-font-lock-level 4)
+
+(use-package which-key
+  :ensure nil
+  :init
+  (setq which-key-idle-delay 1.5)
+  (setq which-key-idle-secondary-delay 0.25)
+  (setq which-key-add-column-padding 1)
+  (setq which-key-max-description-length 40)
+  (which-key-mode 1))
+
+(unless (and (eq window-system 'mac)
+             (bound-and-true-p mac-carbon-version-string))
+  ;; Enables `pixel-scroll-precision-mode' on all operating systems and Emacs
+  ;; versions, except for emacs-mac.
+  ;;
+  ;; Enabling `pixel-scroll-precision-mode' is unnecessary with emacs-mac, as
+  ;; this version of Emacs natively supports smooth scrolling.
+  ;; https://bitbucket.org/mituharu/emacs-mac/commits/65c6c96f27afa446df6f9d8eff63f9cc012cc738
+  (setq pixel-scroll-precision-use-momentum nil) ; Precise/smoother scrolling
+  (pixel-scroll-precision-mode 1))
+
+;; Display the time in the modeline
+(display-time-mode 1)
+
+;; Paren match highlighting
+(show-paren-mode 1)
+
+;; Track changes in the window configuration, allowing undoing actions such as
+;; closing windows.
+(setq winner-boring-buffers '("*Completions*"
+                                "*Minibuf-0*"
+                                "*Minibuf-1*"
+                                "*Minibuf-2*"
+                                "*Minibuf-3*"
+                                "*Minibuf-4*"
+                                "*Compile-Log*"
+                                "*inferior-lisp*"
+                                "*Fuzzy Completions*"
+                                "*Apropos*"
+                                "*Help*"
+                                "*cvs*"
+                                "*Buffer List*"
+                                "*Ibuffer*"
+                                "*esh command on file*"))
+(winner-mode 1)
+
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator "•")
+(setq uniquify-after-kill-buffer-p t)
+
+;; Window dividers separate windows visually. Window dividers are bars that can
+;; be dragged with the mouse, thus allowing you to easily resize adjacent
+;; windows.
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Window-Dividers.html
+(window-divider-mode 1)
+
+;; Constrain vertical cursor movement to lines within the buffer
+(setq dired-movement-style 'bounded-files)
+
+;; Dired buffers: Automatically hide file details (permissions, size,
+;; modification date, etc.) and all the files in the `dired-omit-files' regular
+;; expression for a cleaner display.
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+
+;; Hide files from dired
+(setq dired-omit-files (concat "\\`[.]\\'"
+                               "\\|\\(?:\\.js\\)?\\.meta\\'"
+                               "\\|\\.\\(?:elc\\|a\\|o\\|pyc\\|pyo\\|swp\\|class\\)\\'"
+                               "\\|^\\.DS_Store\\'"
+                               "\\|^\\.\\(?:svn\\|git\\)\\'"
+                               "\\|^\\.ccls-cache\\'"
+                               "\\|^__pycache__\\'"
+                               "\\|^\\.project\\(?:ile\\)?\\'"
+                               "\\|^flycheck_.*"
+                               "\\|^flymake_.*"))
+(add-hook 'dired-mode-hook #'dired-omit-mode)
+
+;; dired: Group directories first
+(with-eval-after-load 'dired
+  (let ((args "--group-directories-first -ahlv"))
+    (when (or (eq system-type 'darwin) (eq system-type 'berkeley-unix))
+      (if-let* ((gls (executable-find "gls")))
+          (setq insert-directory-program gls)
+        (setq args nil)))
+    (when args
+      (setq dired-listing-switches args))))
+
+;; Enables visual indication of minibuffer recursion depth after initialization.
+(minibuffer-depth-indicate-mode 1)
+
+;; Configure Emacs to ask for confirmation before exiting
+(setq confirm-kill-emacs 'y-or-n-p)
+
+;; Enabled backups save your changes to a file intermittently
+(setq make-backup-files t)
+(setq vc-make-backup-files t)
+(setq kept-old-versions 10)
+(setq kept-new-versions 10)
+
+;; When tooltip-mode is enabled, certain UI elements (e.g., help text,
+;; mouse-hover hints) will appear as native system tooltips (pop-up windows),
+;; rather than as echo area messages. This is useful in graphical Emacs sessions
+;; where tooltips can appear near the cursor.
+(setq tooltip-hide-delay 20)    ; Time in seconds before a tooltip disappears (default: 10)
+(setq tooltip-delay 0.4)        ; Delay before showing a tooltip after mouse hover (default: 0.7)
+(setq tooltip-short-delay 0.08) ; Delay before showing a short tooltip (Default: 0.1)
+(tooltip-mode 1)
+
+;; Keep unmodified buffers A/B/C at session end
+(setq ediff-keep-variants t)
+
+;; Automatically apply verified, safe file-local variables. This eliminates
+;; confirmation prompts when loading files, while ensuring that unauthorized or
+;; risky configurations are silently ignored.
+(setq enable-local-variables :safe)
+
+;; Support for Git files (.gitconfig, .gitignore, .gitattributes...)
+(use-package git-modes
+  :commands (gitattributes-mode
+             gitconfig-mode
+             gitignore-mode)
+  :mode (("/\\.gitignore\\'" . gitignore-mode)
+         ("/info/exclude\\'" . gitignore-mode)
+         ("/git/ignore\\'" . gitignore-mode)
+
+         ("/\\.gitconfig\\'" . gitconfig-mode)
+         ("/\\.git/config\\'" . gitconfig-mode)
+         ("/modules/.*/config\\'" . gitconfig-mode)
+         ("/git/config\\'" . gitconfig-mode)
+         ("/\\.gitmodules\\'" . gitconfig-mode)
+         ("/etc/gitconfig\\'" . gitconfig-mode)
+
+         ("/\\.gitattributes\\'" . gitattributes-mode)
+         ("/info/attributes\\'" . gitattributes-mode)
+         ("/git/attributes\\'" . gitattributes-mode)))
+
+;; Configure built-in sgml-mode to automatically enable
+;; `sgml-electric-tag-pair-mode' in `html-mode' and `mhtml-mode',
+;; providing automatic insertion of matching closing tags.
+(use-package sgml-mode
+  :ensure nil
+  :commands (sgml-mode sgml-electric-tag-pair-mode)
+  :hook ((html-mode mhtml-mode) . sgml-electric-tag-pair-mode))
+
+;; Support for YAML files.
+;;
+;; NOTE: Prefer the tree-sitter-based yaml-ts-mode over yaml-mode when
+;; available, as it provides more accurate syntax parsing and enhanced
+;; editing features.
+(use-package yaml-mode
+  :commands yaml-mode
+  :mode (("\\.yaml\\'" . yaml-mode)
+         ("\\.yml\\'" . yaml-mode)))
+
+;; Support for Gnuplot files
+(use-package gnuplot
+  :commands gnuplot-mode
+  :mode ("\\.gp\\'" . gnuplot-mode))
+
+;; CSV file support with automatic column alignment. This
+;; configuration enables csv-align-mode whenever a CSV file is opened,
+;; improving readability by keeping columns visually aligned according
+;; to a configurable maximum width and a set of recognized field
+;; separators.
+(use-package csv-mode
+  :commands (csv-mode
+             csv-align-mode
+             csv-guess-set-separator)
+  :mode ("\\.csv\\'" . csv-mode)
+  :hook ((csv-mode . csv-align-mode)
+         (csv-mode . csv-guess-set-separator))
+  :init
+  (setq csv-align-max-width 100)
+  (setq csv-separators '("," ";" " " "|" "\t")))
+
+
+;;;; The following code is from Emacs Bedrock
+;;; Emacs
+(use-package emacs
+  :config
+  ;; Code folding config
+                                        ;(setopt hs-show-indicators t)         ; Show collapse indicators in margin
+                                        ;(setopt hs-display-lines-hidden t)    ; Show number of collapsed lines
+
+
+  ;; Treesitter config
+
+  ;; Enable tree-sitter in all available modes
+  (setopt treesit-enabled-modes t)
+
+  ;; Amount to highlight: integer between 1-4; 4 is max highlighting
+  (setopt treesit-font-lock-level 3)
+
+  ;; What to do if language grammar not installed: default is `ask';
+  ;; other options are `always', and `ask-dir'.
+  (setopt treesit-auto-install-grammar 'ask)
+
+  :hook
+  ;; Auto parenthesis matching
+  ((prog-mode . electric-pair-mode)))
+
+;;; Version control
+;; Magit: best Git client to ever exist
+(use-package magit
+  :bind (("C-x g" . magit-status)))
+
+;;; Corfu
+;; Pretty icons for corfu
+(use-package kind-icon
+  :if (display-graphic-p)
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
 ;;; (provide post-init.el)
 ;;; post-init.el ends here
