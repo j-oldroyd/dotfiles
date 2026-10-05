@@ -24,3 +24,81 @@ Of course, before I can start using these tools I need to configure Emacs
 itself.  Much of that configuration is taken from James Cherti's [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]]
 project and Ashton Wiersdorf's [[https://codeberg.org/ashton314/emacs-bedrock][Emacs Bedrock]] starter kit.  Much of this will
 also be taken from an earlier [[https://github.com/j-oldroyd/emacs-prelude-config][configuration of mine]] based on [[https://prelude.emacsredux.com/][Emacs Prelude]].
+
+* Initialization files
+
+** =early-init.el= and =init.el=
+
+The =early-init.el= file is taken from the [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]] project.  While this
+file is not intended to be modified, it offers the flexibility of defining files
+=pre-early-init.el= and =post-early-init.el=, which are loaded at the
+appropriate times relative to =early-init.el=.  This file focuses on making
+recommended optimizations to improve Emacs' startup times.
+
+The =init.el= is similar and is meant to contain the bulk of configurations from
+the =minimal-emacs.d= project.  This is also not meant to be modified; instead,
+modify =pre-init.el= and =post-init.el=.
+
+** =pre-early-init.el=
+This file contains some basic UI tweaks and a common sense way to reduce clutter
+in =.emacs.d/=.
+
+*** Variables of note:
+- =minimal-emacs-ui-features=: set basic features of the UI.
+
+** =post-init.el=
+
+This file contains packages for improving base functionalities of Emacs (such as
+completion an undo/redo).  This is also where the theme is set.
+
+*** Packages of note:
+- [[https://github.com/jamescherti/compile-angel.el][=compile-angel=]]: speeds up Emacs by ensuring libraries are byte-compiled and
+  native compiled.
+- =auto-revert=, =recentf=, =savehist=, =saveplace=: file management and history
+- =corfu= and =cape=: completion frameworks.
+- =vertico=, =orderless=, =marginalia=, =embark=, =embark-consult=: useful
+  packages for minibuffer/command completions.
+- =undo-fu=: provides undo/redo functionality.
+- =vim-tab-bar=: integrates the built-in Emacs tab bar with the current theme.
+- =easysession=: make buffer arrangements (and more) persist across Emacs sessions.
+- =kirigami=: provides a unified interface to different code-folding mechanisms
+  in Emacs.
+- =outline=: provides =outline-minor-mode=, a built-in mode for working with
+  code outlines.
+- =outline-indent=: provides outline functionality for languages that use
+  indentation in their syntax (such as Python).
+- =treesit-fold=: uses =treesitter= to help with code folding.
+- =apheleia=: asynchronous code formatting.
+- =dumb-jump=: context-aware jump to definition functionality for many
+  languages.
+- =yasnippet=: provides snippet functionality.  I will need to modify the
+  configuration for this later to make it play well with CDLaTeX.
+- =stripspace=: remove unnecessary whitespace on save.
+- =diff-hl=: add Git markings to gutter.
+- =org=: provides some basic settings for Org mode.
+- Eglot: provides some basic settings for LSP use in Emacs, including Python.
+  Note that the Python LSP requires the third-party-tool =python-lsp=server=.
+- =buffer-terminator=: kills unused buffers.
+- =treemacs=: provides directory trees in Emacs.
+- =helpful=: better =*Help*= buffers.
+- =bufferfile=: improves buffer renaming/deleting functionality.
+- =aggressive-indent=, =highlight-defined=, =paredit=: improves Emacs Lisp code
+  writing.
+- =quick-sdcv=: provides offline dictionary.  This requires the third-part
+  =sdcv= tool.  Dictionaries can be downloaded from [[http://download.huzheng.org/][this website]].
+- =server=: provides settings for =emacsclient=.
+
+*** Variables of note:
+- =auto-save-*=: settings for using =auto-save-mode=.
+- =corfu-auto=: James Cherti recommends that this not be set to =t= by default
+  due to performance and security concerns.  Instead, only do so in directories
+  where all files can be trusted.
+- =buffer-terminator-alist=: rules for =buffer-terminator=.
+- =tab-bar-show=: controls when tab bar appears.
+- =quick-sdcv-dictionary-data-dir=: controls where dictionaries are to be found
+  (if not downloaded to =/usr/share/stardict/dic/=).
+
+*** Keybindings of note:
+- =C-z= is unset from its default of =suspend-frame= and now applies to
+  =undo-fu= instead.
+- =C-c z= is used as a prefix for =kirigami=.
