@@ -5,7 +5,7 @@
 ;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: maint
 ;; Version: 1.5.2
-;; SPDX-License-Identifier: GPL-3.0-or-later
+;; SPDX-License-Identifier: GPL-3.0-or-lat
 
 ;;; Commentary:
 
