@@ -207,17 +207,6 @@ indentAfterItems:
   questions: 1
   parts: 1
 
-# if you want to use other names for your items (for example, \part)
-# then populate them here; note that you can trick latexindent.pl
-# into indenting all kinds of commands (within environments specified in
-# indentAfterItems) using this technique.
-# ADDED: "question" and "part" for exam class
-itemNames:
-  item: 1
-  myitem: 1
-  question: 1
-  part: 1
-
 # specialBeginEnd is, by default, mathmode focus, although
 # there's no restrictions
 # ADDED: "inlineMathParens"
@@ -318,6 +307,8 @@ indentRules:
   section: " "
   item: "    "
   myitem: "        "
+  question: ""
+  qpart: ""
 
 # set noAdditionalIndent globally for codeblocks
 noAdditionalIndentGlobal:
@@ -616,7 +607,18 @@ fineTuning:
   environments:
     name: [a-zA-Z@\*0-9_\\]+
   items:
-    itemRegEx: \\(?:item|myitem)
+    itemRegEx: |-
+      (?x:)
+      \\
+      (?:
+        item
+        |
+        question
+        |
+        qpart
+        |
+        part
+      )
   ifElseFi:
     name: (?!@?if[a-zA-Z@]*?\{)@?if[a-zA-Z@]*
     elseOrRegEx: \\(?:else|or)
