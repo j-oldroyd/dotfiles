@@ -78,6 +78,11 @@ Ignored if `minimal-emacs-optimize-startup-gc' is nil.")
 (defvar minimal-emacs-gc-cons-threshold-restore-delay nil
   "Number of seconds to wait before restoring `gc-cons-threshold'.")
 
+(defvar minimal-emacs-optimize-file-name-handler-alist t
+   "Enable optimization of `file-name-handler-alist'.
+When non-nil, this variable activates optimizations to reduce file name handler
+lookups during Emacs startup.")
+
 (defvar minimal-emacs-disable-mode-line-during-startup t
   "Disable the mode line during startup.
 This reduces visual clutter and slightly enhances startup performance.
