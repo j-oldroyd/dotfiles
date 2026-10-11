@@ -106,6 +106,7 @@
 ;; Trigger an auto-save 30 seconds of idle time.
 (setq auto-save-timeout 30)
 
+;;; Completion enhancements
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
 ;; can be selected by navigating up or down.
@@ -160,7 +161,7 @@
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
 
   ;; The :init section is always executed.
   :init
@@ -383,6 +384,7 @@
   ;; - To save the session at regular intervals, and when Emacs exits.
   (easysession-setup))
 
+;;; Code folding
 (use-package kirigami
   :commands (kirigami-open-fold
              kirigami-open-fold-rec
@@ -529,6 +531,7 @@
     (setq dumb-jump-force-searcher 'rg)
     (setq dumb-jump-prefer-searcher 'rg)))
 
+;;; YASnippet
 ;; The official collection of snippets for yasnippet.
 (use-package yasnippet-snippets)
 
@@ -654,6 +657,7 @@
 
   (buffer-terminator-mode 1))
 
+;;; treemacs
 ;; A file and project explorer for Emacs that displays a structured tree
 ;; layout, similar to file browsers in modern IDEs. It functions as a sidebar
 ;; in the left window, providing a persistent view of files, projects, and
@@ -756,12 +760,12 @@
 
   (treemacs-hide-gitignored-files-mode nil))
 
- (use-package treemacs-icons-dired
-   :hook (dired-mode . treemacs-icons-dired-enable-once))
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once))
 
- (use-package treemacs-tab-bar  ; treemacs-tab-bar if you use tab-bar-mode
-   :after (treemacs)
-   :config (treemacs-set-scope-type 'Tabs))
+(use-package treemacs-tab-bar  ; treemacs-tab-bar if you use tab-bar-mode
+  :after (treemacs)
+  :config (treemacs-set-scope-type 'Tabs))
 
 ;; (treemacs-start-on-boot)
 
@@ -798,6 +802,7 @@
   ;; buffer.
   (setq bufferfile-delete-switch-to 'parent-directory))
 
+;;; Indentation and delimiters
 ;; Enables automatic indentation of code while typing
 (use-package aggressive-indent
   :commands aggressive-indent-mode
@@ -869,6 +874,7 @@
   ;; You can then unfold the dictionaries you want to read.
   (setq quick-sdcv-fold-on-search t))
 
+;;; Server
 ;; The Emacs server allows external programs such as `emacsclient' to
 ;; connect to a single running instance of Emacs. This makes it
 ;; possible to open files in the existing session rather than starting
@@ -893,13 +899,15 @@
   ;; initializing
   (add-hook 'emacs-startup-hook #'my-server-start))
 
-;;; Enable automatic insertion and management of matching pairs of characters
-;;; (e.g., (), {}, "") globally using `electric-pair-mode'.
+;;; elec-pair
+;; Enable automatic insertion and management of matching pairs of characters
+;; (e.g., (), {}, "") globally using `electric-pair-mode'.
 (use-package elec-pair
   :ensure nil
   :init
   (electric-pair-mode 1))
 
+;;; UI adjustments
 ;; Set the fringes to match the pixel height of a character. This ensures the
 ;; fringe is wide enough, scaling dynamically with the current font size.
 (fringe-mode (frame-char-width))
@@ -951,20 +959,20 @@
 ;; Track changes in the window configuration, allowing undoing actions such as
 ;; closing windows.
 (setq winner-boring-buffers '("*Completions*"
-                                "*Minibuf-0*"
-                                "*Minibuf-1*"
-                                "*Minibuf-2*"
-                                "*Minibuf-3*"
-                                "*Minibuf-4*"
-                                "*Compile-Log*"
-                                "*inferior-lisp*"
-                                "*Fuzzy Completions*"
-                                "*Apropos*"
-                                "*Help*"
-                                "*cvs*"
-                                "*Buffer List*"
-                                "*Ibuffer*"
-                                "*esh command on file*"))
+                              "*Minibuf-0*"
+                              "*Minibuf-1*"
+                              "*Minibuf-2*"
+                              "*Minibuf-3*"
+                              "*Minibuf-4*"
+                              "*Compile-Log*"
+                              "*inferior-lisp*"
+                              "*Fuzzy Completions*"
+                              "*Apropos*"
+                              "*Help*"
+                              "*cvs*"
+                              "*Buffer List*"
+                              "*Ibuffer*"
+                              "*esh command on file*"))
 (winner-mode 1)
 
 (setq uniquify-buffer-name-style 'reverse)
@@ -1100,6 +1108,7 @@
 ;;;; The following code is from Emacs Bedrock
 ;;; Emacs
 (use-package emacs
+  :ensure nil
   :config
   ;; Code folding config
                                         ;(setopt hs-show-indicators t)         ; Show collapse indicators in margin
@@ -1126,6 +1135,7 @@
 ;; Magit: best Git client to ever exist
 (use-package magit
   :bind (("C-x g" . magit-status)))
+;; TODO: add magit-todos
 
 ;;; Corfu
 ;; Pretty icons for corfu
@@ -1135,5 +1145,18 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-;;; (provide post-init.el)
-;;; post-init.el ends here
+;;;; Modules
+;; Modules can be loaded individually (default) or recurseively. The directories
+;; must be added to the load path first. The command below is adapted from
+;; Prot's Emacs config (included for reference):
+;;
+;; (mapc (lambda (string) (add-to-list 'load-path (locate-user-emacs-file
+;; string))) '("prot-lisp" "prot-emacs-modules"))
+(add-to-list 'load-path (locate-user-emacs-file "user-modules"))
+
+;;; Meow
+;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
+(require 'meow-config)
+
+;; (provide post-init.el)
+;; post-init.el ends here

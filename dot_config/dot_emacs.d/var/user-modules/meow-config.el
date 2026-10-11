@@ -116,20 +116,22 @@
   :config
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?a . angle))
-  ; LaTeX settings for meow. Taken from
-  ; https://aatmunbaxi.netlify.app/comp/configuring_meow_friendly_latex/
+                                        ; LaTeX settings for meow. Taken from
+                                        ; https://aatmunbaxi.netlify.app/comp/configuring_meow_friendly_latex/
   (meow-thing-register 'inline-math
                        '(pair ("\\(") ("\\)"))
                        '(pair ("\\(") ("\\)") ) )
   (add-to-list 'meow-char-thing-table '(?m . inline-math))
-  ; Default states for modes
+                                        ; Default states for modes
   (add-to-list 'meow-mode-state-list '(mu4e-main-mode . insert))
   (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
   (add-to-list 'meow-mode-state-list '(magit-status-mode . insert))
   (add-to-list 'meow-mode-state-list '(magit-log-mode . normal))
-  ; Bring in our keybindings
+                                        ; Bring in our keybindings
   (meow-setup)
   (meow-global-mode 1))
 
-;;; (provide meow-config.el)
+;; TODO: Look into meow-tree-sitter.
+
+(provide 'meow-config)
 ;;; meow-config.el ends here
