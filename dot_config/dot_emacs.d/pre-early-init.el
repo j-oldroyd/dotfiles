@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+;; Toggle below to debug init
+(toggle-debug-on-error)
+
 ;; Basic UI
 (setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
 
