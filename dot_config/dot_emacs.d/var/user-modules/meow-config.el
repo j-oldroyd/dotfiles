@@ -106,7 +106,7 @@
 ;; https://github.com/mclear-tools/dotemacs/blob/master/cpm-setup-meow.el
 (use-package meow
   :ensure t
-  :diminish meow-insert mode ; Doom modeline has these
+  :diminish meow-insert-mode
   :diminish meow-normal-mode
   :diminish meow-beacon-mode
   :diminish meow-motion-mode

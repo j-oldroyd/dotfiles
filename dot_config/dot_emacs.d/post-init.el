@@ -107,6 +107,26 @@
 ;; Trigger an auto-save 30 seconds of idle time.
 (setq auto-save-timeout 30)
 
+;;: Modeline
+;; Taken from
+;; https://github.com/MatthewZMD/.emacs.d?tab=readme-ov-file#doom-modeline
+(use-package doom-modeline
+  :ensure t
+  :custom
+  ;; Don't compact font caches during GC. Windows Laggy Issue
+  (inhibit-compacting-font-caches t)
+  (doom-modeline-minor-modes t)
+  (doom-modeline-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-height 15)
+  :config
+  (doom-modeline-mode))
+
+;; Diminish will help keep the modeline clean via :diminish keyword
+(use-package diminish
+  :ensure t)
+;; TODO: Look into https://releases.melpa.org/#/minions
+
 ;;; Completion enhancements
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
@@ -350,7 +370,7 @@
 (use-package easysession
   ;; ':demand t' ensures the package is loaded immediately upon startup
   :demand t
-  :diminish easy-session-save-mode
+  :diminish easysession-save-mode
   :config
   ;; Key mappings
   (global-set-key (kbd "C-c sl") #'easysession-switch-to) ; Load session
@@ -936,13 +956,13 @@
 
 (use-package which-key
   :ensure nil
-  :diminish which-key-mode
   :init
   (setq which-key-idle-delay 1.5)
   (setq which-key-idle-secondary-delay 0.25)
   (setq which-key-add-column-padding 1)
   (setq which-key-max-description-length 40)
-  (which-key-mode 1))
+  (which-key-mode 1)
+  :diminish which-key-mode)
 
 (unless (and (eq window-system 'mac)
              (bound-and-true-p mac-carbon-version-string))
@@ -1157,11 +1177,11 @@
 ;;
 ;; (mapc (lambda (string) (add-to-list 'load-path (locate-user-emacs-file
 ;; string))) '("prot-lisp" "prot-emacs-modules"))
-(add-to-list 'load-path (locate-user-emacs-file "user-modules"))
+(setq user-modules (expand-file-name "user-modules" user-emacs-directory))
 
 ;;; Meow
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
-(require 'meow-config)
+(load-file (expand-file-name "meow-config.el" user-modules))
 
 ;; (provide post-init.el)
 ;; post-init.el ends here
