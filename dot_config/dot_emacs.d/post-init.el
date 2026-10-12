@@ -12,6 +12,7 @@
 ;; of your `~/.emacs.d/post-init.el` file, before all other packages.
 (use-package compile-angel
   :demand t
+  :diminish compile-angel-on-load-mode
   :config
   ;; Set `compile-angel-verbose' to nil to disable compile-angel messages.
   ;; (When set to nil, compile-angel won't show which file is being compiled.)
@@ -349,7 +350,7 @@
 (use-package easysession
   ;; ':demand t' ensures the package is loaded immediately upon startup
   :demand t
-
+  :diminish easy-session-save-mode
   :config
   ;; Key mappings
   (global-set-key (kbd "C-c sl") #'easysession-switch-to) ; Load session
@@ -386,6 +387,7 @@
 
 ;;; Code folding
 (use-package kirigami
+  :diminish kirigami-mode
   :commands (kirigami-open-fold
              kirigami-open-fold-rec
              kirigami-close-fold
@@ -561,7 +563,7 @@
 ;; lines at the end of the buffer when saving.
 (use-package stripspace
   :commands stripspace-local-mode
-
+  :diminish stripspace-local-mode
   ;; Enable for prog-mode-hook, text-mode-hook, conf-mode-hook
   :hook ((prog-mode . stripspace-local-mode)
          (text-mode . stripspace-local-mode)
@@ -643,6 +645,8 @@
                          :rope_autoimport (:enabled :json-false)))))
 
 (use-package buffer-terminator
+  :diminish buffer-terminator-mode
+
   :init
   ;; Enable/Disable verbose mode to log buffer cleanup events
   (setq buffer-terminator-verbose nil)
@@ -932,6 +936,7 @@
 
 (use-package which-key
   :ensure nil
+  :diminish which-key-mode
   :init
   (setq which-key-idle-delay 1.5)
   (setq which-key-idle-secondary-delay 0.25)
