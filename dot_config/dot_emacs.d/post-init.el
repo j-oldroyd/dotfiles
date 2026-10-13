@@ -333,6 +333,12 @@
 
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
+
+;;; Projectile
+;; Projectile improves project management in Emacs.
+(use-package projectile
+  :ensure t)
+
 (use-package undo-fu
   :commands (undo-fu-only-undo
              undo-fu-only-redo
