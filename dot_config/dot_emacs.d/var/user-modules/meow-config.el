@@ -1,4 +1,4 @@
-;;; meow-config.el  -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
+;;; meow-config.el -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -131,7 +131,10 @@
   (meow-setup)
   (meow-global-mode 1))
 
-;; TODO: Look into meow-tree-sitter.
+(use-package meow-tree-sitter
+  :ensure t
+  :config
+  (meow-tree-sitter-register-defaults))
 
 (provide 'meow-config)
 ;;; meow-config.el ends here
