@@ -1163,10 +1163,17 @@
   ((prog-mode . electric-pair-mode)))
 
 ;;; Version control
+;;; Magit
 ;; Magit: best Git client to ever exist
 (use-package magit
   :bind (("C-x g" . magit-status)))
-;; TODO: add magit-todos
+
+;;; magit-todos
+;; Place todos in git-tracked files and have them appear in
+;; magit-status.  See magit-todos-keywords-list.
+(use-package magit-todos
+  :after magit
+  :config (magit-todos-mode 1))
 
 ;;; Corfu
 ;; Pretty icons for corfu

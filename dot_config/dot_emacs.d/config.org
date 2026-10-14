@@ -98,6 +98,7 @@ completion an undo/redo).  This is also where the theme is set.
   =sgml-mode=.
 - =projectile=: enhanced project management in Emacs.
 - =flash=: an Avy alternative that allows for incremental search.
+- =magit-todos=: support for placing TODO keywords in Git projects.
 
 *** Variables of note:
 - =auto-save-*=: settings for using =auto-save-mode=.
@@ -110,6 +111,7 @@ completion an undo/redo).  This is also where the theme is set.
   (if not downloaded to =/usr/share/stardict/dic/=).
 - =display-line-numbers-type=: set to =relative=.
 - =dired-omit-files=: control appearance of filetypes in =dired= buffers.
+- =magit-todos-keywords-list=: keywords that =magit-keywords= will highlight.
 
 *** Keybindings of note:
 - =C-z= is unset from its default of =suspend-frame= and now applies to
