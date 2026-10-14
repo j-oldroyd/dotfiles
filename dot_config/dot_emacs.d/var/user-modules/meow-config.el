@@ -63,7 +63,7 @@
    '("D" . meow-backward-delete)
    '("e" . meow-next-word)
    '("E" . meow-next-symbol)
-   '("f" . meow-find)
+   '("f" . flash-jump)
    '("F" . avy-goto-char-timer)
    '("g" . meow-cancel-selection)
    '("G" . meow-grab)

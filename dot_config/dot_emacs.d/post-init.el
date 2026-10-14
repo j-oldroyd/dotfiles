@@ -1176,6 +1176,20 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
+;;; Flash
+;; This is an alternative to Avy that allows for incremental
+;; searching.  Flash jump is currently bound to "f" in Meow NORMAL
+;; state, so it's not bound here.
+(use-package flash
+  :commands (flash-jump flash-jump-continue flash-treesitter)
+  :ensure t
+  :custom
+  (flash-multi-window t)
+  :config
+  ;; Search integration (labels during C-s, /, ?)
+  (require 'flash-isearch)
+  (flash-isearch-mode 1))
+
 ;;;; Modules
 ;; Modules can be loaded individually (default) or recurseively. The directories
 ;; must be added to the load path first. The command below is adapted from

@@ -96,6 +96,8 @@ completion an undo/redo).  This is also where the theme is set.
 - =git-modes=: support for Git files.
 - =sgml-mode=: support for SGML files.  Note that =nxml-mode= is a derivative of
   =sgml-mode=.
+- =projectile=: enhanced project management in Emacs.
+- =flash=: an Avy alternative that allows for incremental search.
 
 *** Variables of note:
 - =auto-save-*=: settings for using =auto-save-mode=.
