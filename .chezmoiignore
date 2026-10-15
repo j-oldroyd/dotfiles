@@ -1,0 +1,7 @@
+# Ignore settings for Chezmoi
+
+## Emacs
+# I use ~/.config/emacs/var to store package files.  Chezmoi shouldn't
+# track these, as these are generated programmatically by the Emacs
+# configuration.
+dot_config/emacs/var
