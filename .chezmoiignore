@@ -4,4 +4,8 @@
 # I use ~/.config/emacs/var to store package files.  Chezmoi shouldn't
 # track these, as these are generated programmatically by the Emacs
 # configuration.
+<<<<<<< HEAD
 ~/.config/emacs/var/*
+=======
+dot_config/emacs/var/*
+>>>>>>> origin/main
