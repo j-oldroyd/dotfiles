@@ -1,4 +1,4 @@
-;;; org-config.el  -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
+;;; init-org.el --- Configuration for org-mode  -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -24,5 +24,5 @@
   ;; Make exporting quotes better
   (setq org-export-with-smart-quotes t))
 
-;;; (provide org-config.el)
-;;; org-config.el ends here
+(provide init-org.el)
+;;; init-org.el ends here

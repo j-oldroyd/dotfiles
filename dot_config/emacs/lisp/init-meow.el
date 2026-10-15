@@ -1,4 +1,4 @@
-;;; meow-config.el -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
+;;; init-meow.el --- Configuration for meow-mode -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -136,5 +136,5 @@
   :config
   (meow-tree-sitter-register-defaults))
 
-(provide 'meow-config)
-;;; meow-config.el ends here
+(provide 'init-meow)
+;;; init-meow.el ends here

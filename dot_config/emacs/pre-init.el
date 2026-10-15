@@ -54,5 +54,13 @@
   ;; Enable use-package :ensure support for Elpaca.
         (elpaca-use-package-mode))
 
+;;; User modules
+;; Store user modules in emacs/lisp, as in Steve Purcell's Emacs
+;; configuration.  Files in here should follow the naming scheme
+;; "init-<module>.el", and are typically loaded in post-init.el.
+;; https://github.com/purcell/emacs.d
+(setq user-init-directory (expand-file-name "lisp" "~/.config/emacs"))
+(add-to-list 'load-path user-init-directory)
+
 ;;; (provide pre-init.el)
 ;;; pre-init.el ends here

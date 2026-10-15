@@ -107,7 +107,7 @@
 ;; Trigger an auto-save 30 seconds of idle time.
 (setq auto-save-timeout 30)
 
-;;: Modeline
+;;: Modeline enhancements
 ;; Taken from
 ;; https://github.com/MatthewZMD/.emacs.d?tab=readme-ov-file#doom-modeline
 (use-package doom-modeline
@@ -140,6 +140,13 @@
   (setq tab-always-indent 'complete)
 
   (global-corfu-mode 1))
+
+;; Pretty icons for corfu
+(use-package kind-icon
+  :if (display-graphic-p)
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;; Cape, or Completion At Point Extensions, extends the capabilities of
 ;; in-buffer completion. It integrates with Corfu or the default completion UI,
@@ -331,14 +338,10 @@
   ;; (keymap-set consult-narrow-map (concat consult-narrow-key " ?") #'consult-narrow-help)
   )
 
+;;; Undo enhancements
+;; TODO: Compare undo-fu with vundo
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
-
-;;; Projectile
-;; Projectile improves project management in Emacs.
-(use-package projectile
-  :ensure t)
-
 (use-package undo-fu
   :commands (undo-fu-only-undo
              undo-fu-only-redo
@@ -354,6 +357,10 @@
 (use-package undo-fu-session
   :init
   (undo-fu-session-global-mode 1))
+;;; Project enhancements
+;; Projectile improves project management in Emacs.
+(use-package projectile
+  :ensure t)
 
 (let ((inhibit-redisplay t))
   ;; Disable all active themes
@@ -361,11 +368,37 @@
   ;; Load the built-in theme
   (load-theme 'modus-operandi t))
 
+;;; UI enhancements
+;; Set the fringes to match the pixel height of a character.  This
+;; ensures the fringe is wide enough, scaling dynamically with the
+;; current font size.
+(fringe-mode (frame-char-width))
+
+;; When Delete Selection mode is enabled, typed text replaces the
+;; selection if the selection is active.
+(delete-selection-mode 1)
+
+;; Display the current line and column numbers in the mode line
+(setq line-number-mode t)
+(setq column-number-mode t)
+(setq mode-line-position-column-line-format '("%l:%C"))
+
+;; Display of line numbers in the buffer: Read:
+;; https://www.jamescherti.com/emacs-display-line-numbers-mode-performance/
+(setq-default display-line-numbers-type 'relative)
+(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
+  (add-hook hook #'display-line-numbers-mode))
+
+;; Configure the `tab-bar-show` variable to 1 to display the tab bar
+;; exclusively when multiple tabs are open:
+(setopt tab-bar-show 1)
+
 ;; Give Emacs tab-bar a style similar to Vim's
 (use-package vim-tab-bar
   :init
   (vim-tab-bar-mode 1))
 
+;;; Session/save enhancements
 ;; The easysession Emacs package is a session manager for Emacs that
 ;; can persist and restore file editing buffers, indirect
 ;; buffers/clones, Dired buffers, windows/splits, the built-in tab-bar
@@ -876,10 +909,6 @@
              elisp-refs-special
              elisp-refs-symbol))
 
-;; Configure the `tab-bar-show` variable to 1 to display the tab bar
-;; exclusively when multiple tabs are open:
-(setopt tab-bar-show 1)
-
 (use-package quick-sdcv
   :commands (quick-sdcv-search-at-point
              quick-sdcv-search-input)
@@ -936,26 +965,6 @@
   :ensure nil
   :init
   (electric-pair-mode 1))
-
-;;; UI adjustments
-;; Set the fringes to match the pixel height of a character. This ensures the
-;; fringe is wide enough, scaling dynamically with the current font size.
-(fringe-mode (frame-char-width))
-
-;; When Delete Selection mode is enabled, typed text replaces the selection
-;; if the selection is active.
-(delete-selection-mode 1)
-
-;; Display the current line and column numbers in the mode line
-(setq line-number-mode t)
-(setq column-number-mode t)
-(setq mode-line-position-column-line-format '("%l:%C"))
-
-;; Display of line numbers in the buffer:
-;; Read: https://www.jamescherti.com/emacs-display-line-numbers-mode-performance/
-(setq-default display-line-numbers-type 'relative)
-(dolist (hook '(prog-mode-hook text-mode-hook conf-mode-hook))
-  (add-hook hook #'display-line-numbers-mode))
 
 ;; Set the maximum level of syntax highlighting for Tree-sitter modes
 (setq treesit-font-lock-level 4)
@@ -1136,15 +1145,11 @@
   (setq csv-separators '("," ";" " " "|" "\t")))
 
 
-;;;; The following code is from Emacs Bedrock
+;;;; The following code is adapted from Emacs Bedrock
 ;;; Emacs
 (use-package emacs
   :ensure nil
   :config
-  ;; Code folding config
-                                        ;(setopt hs-show-indicators t)         ; Show collapse indicators in margin
-                                        ;(setopt hs-display-lines-hidden t)    ; Show number of collapsed lines
-
 
   ;; Treesitter config
 
@@ -1160,28 +1165,22 @@
 
   :hook
   ;; Auto parenthesis matching
-  ((prog-mode . electric-pair-mode)))
+  ((prog-mode . electric-pair-mode))
+
+  :custom
+  (sentence-end-double-space t))
 
 ;;; Version control
-;;; Magit
 ;; Magit: best Git client to ever exist
 (use-package magit
   :bind (("C-x g" . magit-status)))
 
-;;; magit-todos
+;; magit-todos
 ;; Place todos in git-tracked files and have them appear in
 ;; magit-status.  See magit-todos-keywords-list.
 (use-package magit-todos
   :after magit
   :config (magit-todos-mode 1))
-
-;;; Corfu
-;; Pretty icons for corfu
-(use-package kind-icon
-  :if (display-graphic-p)
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 ;;; Flash
 ;; This is an alternative to Avy that allows for incremental
@@ -1198,17 +1197,12 @@
   (flash-isearch-mode 1))
 
 ;;;; Modules
-;; Modules can be loaded individually (default) or recurseively. The directories
-;; must be added to the load path first. The command below is adapted from
-;; Prot's Emacs config (included for reference):
-;;
-;; (mapc (lambda (string) (add-to-list 'load-path (locate-user-emacs-file
-;; string))) '("prot-lisp" "prot-emacs-modules"))
-(setq user-modules (expand-file-name "user-modules" user-emacs-directory))
+;; Modules can be loaded individually (default) or recurseively.  I
+;; choose to load them individually in order to make debugging easier.
 
 ;;; Meow
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
-(load-file (expand-file-name "meow-config.el" user-modules))
+(require 'init-meow)
 
 ;; (provide post-init.el)
 ;; post-init.el ends here
