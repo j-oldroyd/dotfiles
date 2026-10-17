@@ -1217,10 +1217,17 @@
   :ensure t
   :custom
   (flash-multi-window t)
+  (flash-backdrop t)
+  (flash-rainbow t)
+  (flash-rainbow-shade 2)
+  (flash-highlight-matches t)
+  (flash-label-position 'before)
   :config
   ;; Search integration (labels during C-s, /, ?)
-  (require 'flash-isearch)
-  (flash-isearch-mode 1))
+  ;; Toggle with C-; by default
+  ;; (require 'flash-isearch)
+  ;; (flash-isearch-mode 1)
+  )
 
 ;;;; Modules
 ;; Modules can be loaded individually (default) or recurseively.  I
@@ -1229,6 +1236,10 @@
 ;;; Meow
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
 (require 'init-meow)
+
+;;; Terminal
+;; Terminal emulation in Emacs based on ghostel
+(require 'init-term)
 
 ;; (provide post-init.el)
 ;; post-init.el ends here

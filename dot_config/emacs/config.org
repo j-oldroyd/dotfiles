@@ -51,7 +51,6 @@ This file contains code for using Elpaca instead of the built-in package
 manager.
 
 ** =post-init.el=
-
 This file contains packages for improving base functionalities of Emacs (such as
 completion an undo/redo).  This is also where the theme is set.
 
@@ -99,6 +98,7 @@ completion an undo/redo).  This is also where the theme is set.
 - =projectile=: enhanced project management in Emacs.
 - =flash=: an Avy alternative that allows for incremental search.
 - =magit-todos=: support for placing TODO keywords in Git projects.
+- =ghostel=: terminal emulator in Emacs based on ghostty.
 
 *** Variables of note:
 - =auto-save-*=: settings for using =auto-save-mode=.
@@ -117,3 +117,16 @@ completion an undo/redo).  This is also where the theme is set.
 - =C-z= is unset from its default of =suspend-frame= and now applies to
   =undo-fu= instead.
 - =C-c z= is used as a prefix for =kirigami=.
+
+
+**  =init-meow.el=
+This module sets up the [[https://github.com/meow-edit/meow][Meow modal editing system]] and associated keybinds.
+
+*** Packages of note:
+- =meow.el=: the main package for this module.  This gives Emacs a lightweight
+  modal editing system (compared to Evil) that doesn't overwrite Emacs' own
+  keybindings.
+- =meow-tree-sitter.el=: provides integration with the =treesit= library.  The
+  primary entry point is =meow-tree-sitter-node=, which I have bound to =o= as
+  the documentation suggests.  This will fall back to the =meow= default of
+  =meow-block=.
