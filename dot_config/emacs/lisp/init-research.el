@@ -27,23 +27,12 @@
   (require 'org-roam-protocol)
 
   :custom
+  (org-roam-directory (expand-file-name "org/roam" user-cloud-storage))
   ;; Dailies setup
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %?"
       :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
-
-(cond ((eq system-type 'darwin)
-       (setq org-roam-directory "~/Google Drive/My Drive/org/roam"))
-      ((eq system-type 'windows-nt)
-       (setq org-roam-directory "C:\\Users\\oldroyd.j\\iCloudDrive\\Documents\\org\\roam"))
-      ((eq system-type 'gnu/linux)
-       (setq org-roam-directory "~/GoogleDrive/org/roam")
-       (setq org-roam-graph-viewer
-             (lambda (file)
-               (let
-                   ((org-roam-graph-viewer "/mnt/c/Program Files/Mozilla Firefox/firefox.exe"))
-                 (org-roam-graph--open (concat "file://///wsl$/Ubuntu" (format "message" format-args)ile)))))))
 
 ;; Notes template based on suggested citar config and Jethro Kuan's setup.
 (setq org-roam-capture-templates
@@ -87,23 +76,10 @@
 
 ;;; Bibliography management
 (use-package bib-mode
-  ;; I don't want to load this just yet.  Instead, I'll set
-  ;; OS-specific variables first.
-  :defer t
-  :if (eq system-type 'darwin)
+  ;; Elpaca seems to yell if I don't set :ensure nil.
+  :ensure nil
   :custom
-  (bib-file '("~/Google Drive/My Drive/research/My Library.bib")))
-
-(use-package bib-mode
-  ;; I don't want to load this just yet.  Instead, I'll set
-  ;; OS-specific variables first.
-  :defer t
-  :if (eq system-type 'gnu/linux)
-  :custom
-  (bib-file '("~/GoogleDrive/research/My Library.bib")))
-
-(use-package bib-mode
-  :ensure t)
+  (bib-file '(expand-file-name "research/My Library.bib" user-cloud-storage)))
 
 (use-package org
   :custom

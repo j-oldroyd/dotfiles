@@ -1,4 +1,4 @@
-;;; post-init.el --- Very early initializations -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
+;;; post-init.el --- Very early initializations -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -126,6 +126,15 @@
 (use-package diminish
   :ensure t)
 ;; TODO: Look into https://releases.melpa.org/#/minions
+
+;;; Casual Suite
+;; The Casual suite of packages provides helpful, opinionated transient menus
+;; for working with several different modes.  The most recent version of this
+;; suite provides a convenient, comprehensive install option.  The variable
+;; `casual-init-hook' controls which modules are enabled.  By default, all are
+;; enabled.  This must be installed with package-install.
+;; (require 'casual)
+;; (casual-init)
 
 ;;; Completion enhancements
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
@@ -384,9 +393,8 @@
   (define-key vundo-mode-map (kbd "RET") #'vundo-confirm))
 
 ;;; Project enhancements
-;; Projectile improves project management in Emacs.
-(use-package projectile
-  :ensure t)
+(use-package project
+  :custom (project-vc-extra-root-markers '(".project")))
 
 (let ((inhibit-redisplay t))
   ;; Disable all active themes
@@ -403,6 +411,15 @@
 ;; When Delete Selection mode is enabled, typed text replaces the
 ;; selection if the selection is active.
 (delete-selection-mode 1)
+
+;; Enables highlighted lines.
+(global-hl-line-mode 1)
+(set-face-foreground 'highlight nil)
+
+;; Enable adaptive-wrap to indent wrapped lines in modes that do not
+;; use auto-fill-mode
+(use-package adaptive-wrap
+  :ensure t)
 
 ;; Display the current line and column numbers in the mode line
 (setq line-number-mode t)
@@ -1229,25 +1246,27 @@
   ;; (flash-isearch-mode 1)
   )
 
-;;;; Modules
+;;; Modules
 ;; Modules can be loaded individually (default) or recurseively.  I
 ;; choose to load them individually in order to make debugging easier.
 
-;;; Meow
+;; Load path settings
+(setq user-init-directory (expand-file-name "lisp" "~/.config/emacs"))
+(add-to-list 'load-path user-init-directory)
+
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
 (require 'init-meow)
 
-;;; Terminal
 ;; Terminal emulation in Emacs based on ghostel
 (require 'init-term)
 
-;;; Window management
+;; Window management
 (require 'init-window)
 
-;;; Org mode
+;; Org mode
 (require 'init-org)
 
-;;; Research
+;; Research
 (require 'init-research)
 
 ;; (provide post-init.el)
