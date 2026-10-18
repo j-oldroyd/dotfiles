@@ -46,5 +46,5 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
          :map ghostel-semi-char-mode-map
          ("C-c h" . consult-ghostel-history)))
 
-(provide init-term)
+(provide 'init-term)
 ;;; init-term.el ends here
