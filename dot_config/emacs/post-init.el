@@ -1241,5 +1241,8 @@
 ;; Terminal emulation in Emacs based on ghostel
 (require 'init-term)
 
+;;; Window management
+(require 'init-window)
+
 ;; (provide post-init.el)
 ;; post-init.el ends here

@@ -101,6 +101,10 @@
    '("z" . meow-pop-selection)
    '("/" . consult-line)
    '("'" . repeat)
+   '(")" . meow-forward-slurp)
+   '("(" . meow-backward-slurp)
+   '("}" . meow-forward-barf)
+   '("{" . meow-backward-barf)
    '("<escape>" . ignore)))
 
 ;; Magit/angle config adapted from
