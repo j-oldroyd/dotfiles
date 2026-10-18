@@ -129,9 +129,6 @@
         ((eq system-type 'darwin)
          (setq org-gtd-directory "~/Sync/beorg/gtd/")))
 
-  ;; A Prelude map currently lives in C-c d, and I want to use that for GTD maps
-  (unbind-key "C-c d" prelude-mode-map)
-
   :custom
   ;; Configure TODO keyword states (options like "TODO(t)" or "DONE(d!)" are fine)
   (org-todo-keywords '((sequence "TODO(T)" "NEXT(N)" "WAIT(W)" "|"
@@ -141,7 +138,8 @@
   (org-gtd-keyword-mapping '((todo . "TODO")
                              (next . "NEXT")
                              (wait . "WAIT")
-                             (canceled . "CNCL")))
+                             (canceled . "CNCL")
+                             (done . "DONE")))
 
   :config
   ;; REQUIRED: Enable org-edna for project dependencies
@@ -175,5 +173,5 @@
                              (python . t)
                              (latex . t)))
 
-(provide init-org.el)
+(provide 'init-org)
 ;;; init-org.el ends here

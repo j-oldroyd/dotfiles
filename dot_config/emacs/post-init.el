@@ -1244,5 +1244,11 @@
 ;;; Window management
 (require 'init-window)
 
+;;; Org mode
+(require 'init-org)
+
+;;; Research
+(require 'init-research)
+
 ;; (provide post-init.el)
 ;; post-init.el ends here
