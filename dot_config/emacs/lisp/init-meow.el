@@ -127,12 +127,15 @@
                        '(pair ("\\(") ("\\)"))
                        '(pair ("\\(") ("\\)") ) )
   (add-to-list 'meow-char-thing-table '(?m . inline-math))
-                                        ; Default states for modes
+  ;; Default states for modes
+  (add-to-list 'meow-mode-state-list '(Custom-mode . insert))
   (add-to-list 'meow-mode-state-list '(mu4e-main-mode . insert))
   (add-to-list 'meow-mode-state-list '(mu4e-view-mode . motion))
   (add-to-list 'meow-mode-state-list '(magit-status-mode . insert))
   (add-to-list 'meow-mode-state-list '(magit-log-mode . normal))
-                                        ; Bring in our keybindings
+  (add-to-list 'meow-mode-state-list '(vundo-mode . insert))
+
+  ;; Bring in keybindings from above.
   (meow-setup)
   (meow-global-mode 1))
 
