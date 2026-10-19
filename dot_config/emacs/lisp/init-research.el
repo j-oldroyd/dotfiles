@@ -79,7 +79,7 @@
   ;; Elpaca seems to yell if I don't set :ensure nil.
   :ensure nil
   :custom
-  (bib-file '(expand-file-name "research/My Library.bib" user-cloud-storage)))
+  (bib-file (expand-file-name "research/My Library.bib" user-cloud-storage)))
 
 (use-package org
   :custom
@@ -89,27 +89,11 @@
   (org-cite-activate-processor 'citar))
 
 (use-package citar
-  ;; I don't want to load this just yet.  Instead, I'll set
-  ;; OS-specific variables first.
-  :defer t
-  :if (eq system-type 'darwin)
-  :custom
-  (citar-library-paths '("~/Google Drive/My Drive/research"))
-  (citar-notes-paths '("~/Google Drive/My Drive/research")))
-
-(use-package citar
-  ;; I don't want to load this just yet.  Instead, I'll set
-  ;; OS-specific variables first.
-  :defer t
-  :if (eq system-type 'gnu/linux)
-  :custom
-  (citar-library-paths '("~/GoogleDrive/research"))
-  (citar-notes-paths '("~/GoogleDrive/research")))
-
-(use-package citar
   :ensure t
   :diminish
   :custom
+  (citar-library-paths `( ,(expand-file-name "research" user-cloud-storage)))
+  (citar-notes-paths `( ,(expand-file-name "research" user-cloud-storage)))
   (citar-bibliography org-cite-global-bibliography)
   (citar-org-roam-subdir "references")
   (bibtex-dialect "biblatex")
