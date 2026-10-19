@@ -6,3 +6,5 @@
 # configuration.
 ~/.config/emacs/var/*
 
+# Chezmoi also shouldn't track certain custom variables.
+~/.config/emacs/custom.el
