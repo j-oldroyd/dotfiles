@@ -23,10 +23,6 @@
   (setq kill-do-not-save-duplicates t))
 
 ;;; User variables
-;; Cloud storage
-(defcustom user-cloud-storage "~/Google Drive"
-  "Cloud storage directory."
-  :type 'directory)
 
 (provide 'init-custom)
 ;;; init-custom.el ends here

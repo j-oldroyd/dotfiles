@@ -124,5 +124,43 @@
 (setopt org-cite-export-processors '((t csl)))
 (setopt org-cite-csl-styles-dir "~/Zotero/styles")
 
+;;; Reading
+;; Chai is a package that promotes "destructive reading" to fully absorb books
+;; stored as .org files in Emacs.
+(use-package chai
+  :vc (:url "https://github.com/yibie/chai.git"))
+
+(use-package chai-library
+  :vc (:url "https://github.com/yibie/chai.git"))
+
+(use-package chai-library-table
+  :vc (:url "https://github.com/yibie/chai.git"))
+
+;; Optional: Global keybindings
+;; (global-set-key (kbd "C-c l") #'chai-library-open)
+;; (global-set-key (kbd "C-c b") #'chai-library-open-book)
+;; (global-set-key (kbd "C-c i") #'chai-library-import)
+
+;; Mir is a package that implements incremental reading into Emacs.  The
+;; configuration below attempts to merge Mir with Chai.  Mir will be used for
+;; scheduling reads, and Chai will be focused on breaking readings into
+;; condensed notes.  The overall reading workflow should look like the
+;; following:
+;;
+;; Mir -> Chai -> Org roam
+(use-package mir
+  :vc (:url "https://github.com/gvalson/mir.el.git")
+  :commands (mir-import-buffer mir-extract-or-import-from-region)
+  :custom
+  (mir-archive-directory chai-library-directory)
+  ;; The following is adapted from a Gemini result
+  :hook (mir-show-topic . (lambda ()
+                            ;; Use Chai's custom faces for topics pulled from Mir
+                            (when (and (derived-mode-p 'org-mode)
+                                       (fboundp 'chai-mode))
+                              (chai-mode 1))
+
+                            (mir-topic-minor-mode 1))))
+
 (provide 'init-research)
 ;;; init-research.el ends here

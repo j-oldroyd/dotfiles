@@ -54,5 +54,10 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
+;; Cloud storage
+(defcustom user-cloud-storage "~/Google Drive"
+  "Cloud storage directory."
+  :type 'directory)
+
 ;;; (provide pre-init.el)
 ;;; pre-init.el ends here
