@@ -153,6 +153,7 @@
   :commands (mir-import-buffer mir-extract-or-import-from-region)
   :custom
   (mir-archive-directory chai-library-directory)
+  (mir-default-file-extension "*.org")
   ;; The following is adapted from a Gemini result
   :hook (mir-show-topic . (lambda ()
                             ;; Use Chai's custom faces for topics pulled from Mir
