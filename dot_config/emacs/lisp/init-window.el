@@ -17,6 +17,8 @@
   :custom
   ;; Don't use numbers to label the windows, but the keys on home row.
   (aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  ;; Set scope to current frame.
+  (aw-scope 'frame)
   :config
   ;; Set the colour and size of the font used to display the selection
   ;; characters
