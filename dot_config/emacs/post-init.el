@@ -1264,6 +1264,11 @@
 (setq user-init-directory (expand-file-name "lisp" "~/.config/emacs"))
 (add-to-list 'load-path user-init-directory)
 
+;; Custom variables
+(require 'init-custom)
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
 (require 'init-meow)
 
@@ -1278,6 +1283,14 @@
 
 ;; Research
 (require 'init-research)
+
+;; Email
+;; Variables to configure:
+;;
+;; `user-professional-email', `user-semi-professional-email',
+;; `user-personal-email', `user-mail-names'
+
+(require 'init-mail)
 
 ;; (provide post-init.el)
 ;; post-init.el ends here

@@ -125,6 +125,7 @@
 (setopt org-cite-csl-styles-dir "~/Zotero/styles")
 
 ;;; Reading
+;; TODO: Determine if Chai and Mir are worth keeping; they seem difficult to use with math papers.
 ;; Chai is a package that promotes "destructive reading" to fully absorb books
 ;; stored as .org files in Emacs.
 (use-package chai
