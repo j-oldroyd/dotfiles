@@ -25,11 +25,6 @@
   (add-to-list 'display-buffer-alist
                `(,(regexp-quote mu4e-main-buffer-name)
                  display-buffer-same-window))
-  ;; Enable message tagging
-  (add-to-list 'mu4e-headers-actions
-               '("Tag message" . mu4e-action-retag-message))
-  (add-to-list 'mu4e-view-actions
-               '("Tag message" . mu4e-action-retag-message))
 
   ;; Run mu4e-mailing-list-info-refresh to update mailing lists after change
   (add-to-list 'mu4e-user-mailing-lists '(:list-id "tex-live.tug.org" :name "TUG"))
@@ -85,33 +80,33 @@
           message-sendmail-envelope-from 'header
           mail-envelope-from 'header)
     (setq mu4e-contexts
-          `( ,(make-mu4e-context
-               :name "gmail"
-               :match-func (lambda (msg)
-                             (when msg
-                               (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-               :vars '((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
-                       (mu4e-refile-folder . "/gmail/[Gmail]/Archive")
-                       (user-mail-address . user-semi-professional-email)
-                       (mu4e-maildir-shortcuts . ( ("/gmail/INBOX" . ?i)))))
-             ,(make-mu4e-context
-               :name "wvwc-mail"
-               :match-func (lambda (msg)
-                             (when msg
-                               (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-               :vars '((mu4e-trash-folder . "/wvwc-mail/[wvwc-mail]/Trash")
-                       (mu4e-refile-folder . "/wvwc-mail/[wvwc-mail]/Archive")
-                       (user-mail-address . user-professional-email)
-                       (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
-             ,(make-mu4e-context
-               :name "icloud"
-               :match-func (lambda (msg)
-                             (when msg
-                               (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
-               :vars '((mu4e-trash-folder . "/icloud/Deleted Messages")
-                       (mu4e-refile-folder . "/icloud/Archive")
-                       (user-mail-address . user-personal-email)
-                       (mu4e-maildir-shortcuts . ( ("/icloud/INBOX" . ?i))))))))
+          (list (make-mu4e-context
+                 :name "gmail"
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+                 :vars `((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
+                         (mu4e-refile-folder . "/gmail/[Gmail]/Archive")
+                         (user-mail-address . ,user-semi-professional-email)
+                         (mu4e-maildir-shortcuts . ( ("/gmail/INBOX" . ?i)))))
+                (make-mu4e-context
+                 :name "wvwc-mail"
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (string-prefix-p "/wvwc-mail" (mu4e-message-field msg :maildir))))
+                 :vars `((mu4e-trash-folder . "/wvwc-mail/[wvwc-mail]/Trash")
+                         (mu4e-refile-folder . "/wvwc-mail/[wvwc-mail]/Archive")
+                         (user-mail-address . ,user-professional-email)
+                         (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
+                (make-mu4e-context
+                 :name "icloud"
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
+                 :vars `((mu4e-trash-folder . "/icloud/Deleted Messages")
+                         (mu4e-refile-folder . "/icloud/Archive")
+                         (user-mail-address . ,user-personal-email)
+                         (mu4e-maildir-shortcuts . ( ("/icloud/INBOX" . ?i))))))))
 
    ((eq system-type 'gnu/linux)
     (setq send-mail-function 'sendmail-send-it
@@ -120,29 +115,29 @@
           message-sendmail-envelope-from 'header
           mail-envelope-from 'header)
     (setq mu4e-contexts
-          `(,(make-mu4e-context
-              :name "wvwc-mail"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-              :vars '((mu4e-trash-folder . "/wvwc-mail/[Gmail]/Trash")
-                      (mu4e-refile-folder . "/wvwc-mail/[Gmail]/Archive")
-                      (user-mail-address . user-professional-email)
-                      (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
-            ,(make-mu4e-context
-              :name "math-gmail"
-              :match-func (lambda (msg)
-                            (when msg
-                              (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-              :vars '((mu4e-trash-folder . "/math-gmail/[Gmail]/Trash")
-                      (mu4e-refile-folder . "/math-gmail/[Gmail]/Archive")
-                      (user-mail-address . user-semi-professional-email)
-                      (mu4e-maildir-shortcuts . ( ("/math-gmail/INBOX" . ?i))))))))))
+          (list (make-mu4e-context
+                 :name "wvwc-mail"
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+                 :vars `((mu4e-trash-folder . "/wvwc-mail/[Gmail]/Trash")
+                         (mu4e-refile-folder . "/wvwc-mail/[Gmail]/Archive")
+                         (user-mail-address . ,user-professional-email)
+                         (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
+                (make-mu4e-context
+                 :name "math-gmail"
+                 :match-func (lambda (msg)
+                               (when msg
+                                 (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+                 :vars `((mu4e-trash-folder . "/math-gmail/[Gmail]/Trash")
+                         (mu4e-refile-folder . "/math-gmail/[Gmail]/Archive")
+                         (user-mail-address . ,user-semi-professional-email)
+                         (mu4e-maildir-shortcuts . ( ("/math-gmail/INBOX" . ?i))))))))))
 
 ;; Headers can be misaligned with columns in header view, so this code from
 ;; https://www.djcbsoftware.nl/code/mu/mu4e/Known-issues.html tries to fix it.
-(add-hook 'mu4e-headers-mode-hook #'my-mu4e-headers-mode-hook)
-(defun my-mu4e-headers-mode-hook ()
+(add-hook 'mu4e-headers-mode-hook #'my/mu4e-headers-mode-hook)
+(defun my/mu4e-headers-mode-hook ()
   ;; Account for the fringe and other spacing in the header line.
   (header-line-indent-mode 1)
   (push (propertize " " 'display '(space :align-to header-line-indent-width))
@@ -199,8 +194,7 @@
               ("C-c C-g s" . message-goto-subject)
               ("C-c C-g t" . message-goto-to))
 
-  :hook ((message-mode . (lambda ()
-                           (org-msg-mode 'toggle)))))
+  :hook ((message-mode . (lambda () (org-msg-mode 1)))))
 
 ;; Disable fill-paragraph in org-msg to allow mu4e to format=flowed
 ;; each message.  See relevant documentation in mu4e block.

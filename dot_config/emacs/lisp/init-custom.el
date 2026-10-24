@@ -11,28 +11,20 @@
 ;;; Emacs
 (use-package emacs
   :ensure nil
-  :init
-  (setq user-full-name "Jesse Ernest Oldroyd")
-  :config
-  ;; The settings below are suggested by Emacs Redux (the creator of
-  ;; Prelude).  See
-  ;; https://emacsredux.com/blog/2026/04/07/stealing-from-the-best-emacs-configs/
-  (setq redisplay-skip-fontification-on-input t)
-  (setq save-interprogram-paste-before-kill t)
-  (setq-default cursor-in-non-selected-windows nil)
-  (setq highlight-nonselected-windows nil)
-  (setq kill-do-not-save-duplicates t)
-  ;; Highlight the following keywords in files (defaults):
-  ;;
-  ;; HOLD TODO NEXT THEM PROG OKAY DONT FAIL DONE NOTE MAYBE KLUDGE HACK TEMP
-  ;; WIP FIXME DEBUG XXXX
-  ;; (hl-todo-mode 1)
-  )
+  :custom
+  (user-mail-address user-semi-professional-email))
 
 ;;; User variables
 (defgroup user nil
   "User-facing variables."
   :prefix "user-")
+
+;; Library file
+(defcustom user-bibliography-file ""
+  "Load path for user bibliography file.  This is assumed to be a .bib file
+that is managed by some external program (such as Zotero)."
+  :type 'file
+  :group 'user)
 
 ;; Mail variables
 (defcustom user-mu4e-path "/usr/local/share/emacs/site-lisp/mu4e"

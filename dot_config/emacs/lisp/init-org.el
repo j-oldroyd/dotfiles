@@ -8,9 +8,6 @@
 ;;; Code:
 ;; From Emacs Bedrock
 (use-package org
-  :hook ((org-mode . visual-line-mode)  ; wrap lines at word breaks
-         (org-mode . flyspell-mode))    ; spell checking!
-
   :bind (:map global-map
               ("C-c l" . org-store-link)
               ("C-c a" . 'org-agenda)
@@ -29,23 +26,23 @@
 
   ;; Toggle TeX input method with C-\
   (setq default-input-method "TeX")
-  (toggle-input-method)
+
+  :hook ((org-mode . visual-line-mode)  ; wrap lines at word breaks
+         (org-mode . flyspell-mode)    ; spell checking!
+         (org-mode . toggle-input-method))
 
   :custom
   (org-src-fontify-natively t)
   (org-preview-latex-default-process 'dvipng)
   (org-adapt-indentation t)
   (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n)" "PROG(p)" "INTR(i)"
-               "|" "CANCELED(c)" "DONE(d)" "WAITING(w)" "SHELVED(s)")))
+   '((sequence "TODO(t)" "NEXT(n)"
+               "|" "CANCELED(c)" "DONE(d)" "WAITING(w)")))
   (org-todo-keyword-faces
    '(("TODO" . org-todo)
      ("NEXT" . (:foreground "#D35400" :weight bold))
-     ("INTR" . org-warning)
-     ("PROG" . (:foreground "green" :weight bold))
      ("CANCELED" . (:foreground "#7F8CFD" :strike-through t :weight bold))
-     ("WAITING" . (:foreground "#8E44AD" :weight bold))
-     ("SHELVED" . (:foreground "gray" :weight bold))))
+     ("WAITING" . (:foreground "#8E44AD" :weight bold))))
   (org-capture-templates
    '(("t" "Todo" entry (file org-default-notes-file)
       "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)

@@ -113,8 +113,6 @@
 (use-package doom-modeline
   :ensure t
   :custom
-  ;; Don't compact font caches during GC. Windows Laggy Issue
-  (inhibit-compacting-font-caches t)
   (doom-modeline-minor-modes t)
   (doom-modeline-icon t)
   (doom-modeline-major-mode-color-icon t)
@@ -139,15 +137,10 @@
 ;;; Completion enhancements
 ;; Corfu enhances in-buffer completion by displaying a compact popup with
 ;; current candidates, positioned either below or above the point. Candidates
-;; can be selected by navigating up or down.
+;; can be selected by navigating up or down.  Many settings suggested by Emacs
+;; Bedrock are already handled by minimal-emacs, so they are not included here.
 (use-package corfu
   :init
-  (setq text-mode-ispell-word-completion nil)
-  ;; Hide commands in M-x which do not apply to the current mode.
-  (setq read-extended-command-predicate #'command-completion-default-include-p)
-  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
-  (setq tab-always-indent 'complete)
-
   (global-corfu-mode 1)
   :custom
   (corfu-auto t)
@@ -739,6 +732,9 @@
 ;; scheduling, deadlines, time tracking, and exporting to multiple formats
 ;; including HTML, LaTeX, PDF, and Markdown.
 (use-package org
+  ;; Don't let Elpaca manage org.  Use built-in for now.  TODO: Determine if Org
+  ;; should be updated with newer version with improved latex-preview.
+  :ensure nil
   :commands (org-mode org-version)
   :mode
   ("\\.org\\'" . org-mode)
@@ -1242,10 +1238,6 @@
   ;; What to do if language grammar not installed: default is `ask';
   ;; other options are `always', and `ask-dir'.
   (setopt treesit-auto-install-grammar 'ask)
-
-  :hook
-  ;; Auto parenthesis matching
-  ((prog-mode . electric-pair-mode))
 
   :custom
   (sentence-end-double-space t))

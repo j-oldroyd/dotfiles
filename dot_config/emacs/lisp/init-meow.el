@@ -13,8 +13,8 @@
   (meow-motion-define-key
    '("j" . meow-next)
    '("k" . meow-prev)
-   '("/" . consult-line))
-  '("<escape>" . ignore)
+   '("/" . consult-line)
+   '("<escape>" . ignore))
   (meow-leader-define-key
    ;; SPC j/k will run the original command in MOTION state.
    '("j" . "H-j")
@@ -44,10 +44,6 @@
    '("3" . meow-expand-3)
    '("2" . meow-expand-2)
    '("1" . meow-expand-1)
-   '(")" . sp-forward-slurp-sexp)
-   '("(" . sp-forward-barf-sexp)
-   '("{" . sp-backward-slurp-sexp)
-   '("}" . sp-backward-barf-sexp)
    '("-" . negative-argument)
    '(";" . meow-reverse)
    '("," . meow-inner-of-thing)

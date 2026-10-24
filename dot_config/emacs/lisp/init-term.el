@@ -39,6 +39,8 @@ Like normal Emacs `C-k'.  Kill to end of line and put content in kill-ring."
   :ensure t)
 
 (use-package consult-ghostel
+  :if (eq system-type 'darwin)
+  :ensure t
   :hook (after-init . consult-ghostel-mode)
   :bind (("C-x m" . consult-ghostel)
          :map project-prefix-map

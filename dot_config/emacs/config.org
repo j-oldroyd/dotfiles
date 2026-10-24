@@ -1,4 +1,4 @@
-#+TITLE: Jesse Illiterate's Emacs Configuration
+#+TITLE: Jesse Oldroyd's Illiterate Emacs Configuration
 
 This is an Emacs configuration centered around helping me to perform my daily
 duties as a mathematics professor.  As such, this configuration contains tools
@@ -26,7 +26,7 @@ project and Ashton Wiersdorf's [[https://codeberg.org/ashton314/emacs-bedrock][E
 also be taken from an earlier [[https://github.com/j-oldroyd/emacs-prelude-config][configuration of mine]] based on [[https://prelude.emacsredux.com/][Emacs Prelude]].
 
 * Initialization files
-
+# TODO: Outline multifile structure of config and explain precedence order more clearly.
 ** =early-init.el= and =init.el=
 
 The =early-init.el= file is taken from the [[https://github.com/jamescherti/minimal-emacs.d][minimal-emacs.d]] project.  While this
@@ -46,7 +46,7 @@ in =.emacs.d/=.
 *** Variables of note:
 - =minimal-emacs-ui-features=: set basic features of the UI.
 
-** =pre-init=
+** =pre-init.el=
 This file contains code for using Elpaca instead of the built-in package
 manager.
 
@@ -95,7 +95,6 @@ completion an undo/redo).  This is also where the theme is set.
 - =git-modes=: support for Git files.
 - =sgml-mode=: support for SGML files.  Note that =nxml-mode= is a derivative of
   =sgml-mode=.
-- =projectile=: enhanced project management in Emacs.
 - =flash=: an Avy alternative that allows for incremental search.
 - =magit-todos=: support for placing TODO keywords in Git projects.
 - =ghostel=: terminal emulator in Emacs based on ghostty.
@@ -104,8 +103,9 @@ completion an undo/redo).  This is also where the theme is set.
 - =auto-save-*=: settings for using =auto-save-mode=.
 - =corfu-auto=: James Cherti recommends that this not be set to =t= by default
   due to performance and security concerns.  Instead, only do so in directories
-  where all files can be trusted.
-- =buffer-terminator-alist=: rules for =buffer-terminator=.
+  where all files can be trusted.  Since I mostly work on my own files, I've set
+  this to =t= anyway.
+- =buffer-terminator-rules-alist=: rules for =buffer-terminator=.
 - =tab-bar-show=: controls when tab bar appears.
 - =quick-sdcv-dictionary-data-dir=: controls where dictionaries are to be found
   (if not downloaded to =/usr/share/stardict/dic/=).
@@ -118,6 +118,17 @@ completion an undo/redo).  This is also where the theme is set.
   =undo-fu= instead.
 - =C-c z= is used as a prefix for =kirigami=.
 
+* Custom Modules (=lisp/=)
+
+| Module             | Purpose / Core Packages                                                         | Key Bindings                                   |
+|--------------------+---------------------------------------------------------------------------------+------------------------------------------------|
+| =init-custom.el=   | Global user identity, custom =defcustom= declarations for mail & cloud storage. | N/A                                            |
+| =init-meow.el=     | Modal editing setup via =meow= and =meow-tree-sitter=.                          | Movement on =j/k=, Leader on =SPC=             |
+| =init-mail.el=     | Email integration via =mu4e=, =org-msg=, =msmtp=, and =mbsync=.                 | =C-c M= (=mu4e=)                               |
+| =init-org.el=      | GTD workflow (=org-gtd=), agenda, capture templates, =org-modern=.              | =C-c a= (agenda), =C-c c= (capture)            |
+| =init-research.el= | Academic workflow using =org-roam=, =citar=, =org-noter=, and =mir=.            | =C-c n f= (roam find), =C-c n i= (roam insert) |
+| =init-term.el=     | Terminal emulation via =ghostel= and =consult-ghostel=.                         | =C-x m= (=ghostel=)                            |
+| =init-window.el=   | Window navigation using =ace-window=.                                           | =M-o= (=ace-window=)                           |
 
 **  =init-meow.el=
 This module sets up the [[https://github.com/meow-edit/meow][Meow modal editing system]] and associated keybinds.
@@ -130,3 +141,5 @@ This module sets up the [[https://github.com/meow-edit/meow][Meow modal editing 
   primary entry point is =meow-tree-sitter-node=, which I have bound to =o= as
   the documentation suggests.  This will fall back to the =meow= default of
   =meow-block=.
+
+# TODO: Add information about lisp/ subdirectory.
