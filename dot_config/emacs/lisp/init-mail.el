@@ -6,9 +6,16 @@
 
 ;;; Code:
 
+;; `mu4e' is installed with mu, and so we load it from where it's installed.
+;; This value is stored in the custom variable `user-mu4e-path'.  We also need
+;; to make sure Elpaca doesn't mess with it since Elpaca can't find it on
+;; (M)ELPA.  We disable Elpaca for `nano-mu4e' as well, as it depends on `mu4e'
+;; and then Elpaca tries to find it again.
 (use-package mu4e
+  :ensure nil
+  :elpaca nil
   :load-path user-mu4e-path
-  :vc t ;; adds symlink to elpa dir
+  ;; :vc t ;; adds symlink to elpa dir
   :bind (("C-c M" . mu4e))
   :config
   ;; mu4e likes to open in full frame, so... don't do that. Taken from
@@ -39,6 +46,9 @@
 ;; Nice looking minor mode for nano-mu4e
 (use-package nano-mu4e
   :defer t
+  :ensure nil
+  :elpaca nil
+  :after mu4e
   :vc (:url "https://github.com/rougier/nano-mu4e.git"
             :rev :newest))
 

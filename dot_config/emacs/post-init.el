@@ -148,7 +148,25 @@
   ;; Disable Ispell completion function. As an alternative try `cape-dict'.
   (setq tab-always-indent 'complete)
 
-  (global-corfu-mode 1))
+  (global-corfu-mode 1)
+  :custom
+  (corfu-auto t)
+  :bind
+  (:map corfu-map
+        ("SPC" . corfu-insert-separator)
+        ("C-n" . corfu-next)
+        ("C-p" . corfu-previous)))
+
+;; Part of corfu
+(use-package corfu-popupinfo
+  :after corfu
+  :ensure nil
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
+  :config
+  (corfu-popupinfo-mode))
 
 ;; Pretty icons for corfu
 (use-package kind-icon
@@ -426,8 +444,17 @@
 (global-hl-line-mode 1)
 (set-face-foreground 'highlight nil)
 
-;; Enable adaptive-wrap to indent wrapped lines in modes that do not
-;; use auto-fill-mode
+;; `hl-todo-mode' will highlight specific TODO keywords in files.  The defaults
+;; are as follows: HOLD TODO NEXT THEM PROG OKAY DONT FAIL DONE NOTE MAYBE
+;; KLUDGE HACK TEMP WIP FIXME DEBUG XXXX
+;; We can navigate keywords with keybindings by setting `hl-todo-mode-map'
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode))
+
+;; Enable adaptive-wrap to indent wrapped lines in modes that do not use
+;; `auto-fill-mode'
 (use-package adaptive-wrap
   :ensure t)
 

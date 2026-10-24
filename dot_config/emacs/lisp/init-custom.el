@@ -10,6 +10,7 @@
 
 ;;; Emacs
 (use-package emacs
+  :ensure nil
   :init
   (setq user-full-name "Jesse Ernest Oldroyd")
   :config
@@ -25,7 +26,8 @@
   ;;
   ;; HOLD TODO NEXT THEM PROG OKAY DONT FAIL DONE NOTE MAYBE KLUDGE HACK TEMP
   ;; WIP FIXME DEBUG XXXX
-  (hl-todo-mode 1))
+  ;; (hl-todo-mode 1)
+  )
 
 ;;; User variables
 (defgroup user nil
