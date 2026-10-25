@@ -551,6 +551,11 @@
 With prefix ARG, force the direction: a positive number closes all
 folds, zero or a negative number opens all folds."
   (interactive "P")
+  ;; Personal comments: The code below defines the variable close to keep track
+  ;; of the current state of the buffer.  If no prefix argument is given, then
+  ;; close just takes the negation of the current value
+  ;; `my/kirigami-all-folded-p' (i.e., it toggles it!).  If a positive prefix
+  ;; argument is given, then close is set to t.  Otherwise, it is nil.
   (let ((close (cond ((null arg) (not my/kirigami-all-folded-p))
                      ((> (prefix-numeric-value arg) 0) t)
                      (t nil))))
