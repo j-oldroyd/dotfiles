@@ -1,5 +1,4 @@
 # Ignore settings for Chezmoi
-/.DS_Store
 **/.DS_Store
 
 ## Emacs

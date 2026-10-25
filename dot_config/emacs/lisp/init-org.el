@@ -96,6 +96,15 @@
   ((org-mode . org-modern-mode)
    (org-agenda-finalize . org-modern-agenda)))
 
+
+;; Org-transclusion
+;; Org-transclusion lets you insert text from another file.  For example, I can
+;; define course outcomes in a file outcomes.org and then insert them
+;; programmatically into a rubric.
+;; TODO: Look into setting this up.
+(use-package org-transclusion
+  :ensure t)
+
 ;;; Org exporters
 (require 'ox-latex)
 (add-to-list 'org-latex-classes
@@ -169,6 +178,273 @@
                              (gnuplot . t)
                              (python . t)
                              (latex . t)))
+
+;;; Assessment
+;; I use Org mode for grading homework assignments and tests.  These are helper
+;; functions that I've created (through AI) to help me do so.  My goal is to
+;; mimic the Gradescope workflow in Org mode.
+
+;; Code produced using Google Gemini
+(defun my/org-grading-calculate-score ()
+  "Calculate points in the current subtree based on checked items with '::
++/-N'.  Returns the total points."
+  (interactive)
+  (save-excursion
+    ;; If we are inside a code block, move out to the parent headline first
+    (when (org-in-src-block-p)
+      (org-back-to-heading))
+
+    (let ((points 0))
+      ;; We limit the search to the current subtree
+      (org-narrow-to-subtree)
+      (goto-char (point-min))
+
+      ;; Search for lines with checkboxes and ":: value"
+      (while (re-search-forward "^[ \t]*- \\[[xX]\\] .* :: \\(.*\\)" nil t)
+        (setq points (+ points (string-to-number (match-string 1)))))
+
+      (widen)
+      points)))
+
+;; TODO: Introduce calculate-score question that implements below
+;; regex?  This could also be used above in my/org-grading-calculate-score.
+(defun org-dblock-write:grading-score (params)
+  "Dynamic block to summarize grades."
+  (let ((total 0))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^[ \t]*- \\[[xX]\\] .* :: \\(.*\\)" nil t)
+        (setq total (+ total (string-to-number (match-string 1))))))
+    (insert (format "Total Score: *%s*" total))))
+
+(defun my/org-grading-broadcast-item (heading-name item-text points-text)
+  "Add ITEM-TEXT to HEADING-NAME in all .org files in the current directory."
+  ;;(interactive "sHeading Name (exact match): \nsRubric Item (e.g., '- [ ] Foo :: -1'):")
+  ;; FIXME: Not quite working right
+  (interactive (list (read-string "Enter heading name (exact match): " (org-get-heading))
+                     (read-string "Rubric item: " "Text")
+                     (read-string "Points (include +/-): " "+1")))
+  (let ((files (directory-files "." t "\\.org$")))
+    (dolist (file files)
+      (with-current-buffer (find-file-noselect file)
+        (save-excursion
+          (goto-char (point-min))
+          ;; Find the specific headline
+          (if (re-search-forward (format "^\\*+ .*\\b%s\\b" (regexp-quote
+                                                             heading-name)) nil t)
+              (progn
+                ;; Move to end of this item list to append the item.
+                ;; This assumes that the item list is the final
+                ;; component of the question subtree!
+                (org-end-of-subtree)
+                (insert (format "%s%s" (progn (org-insert-item t) "") item-text))
+                (end-of-line)
+                (insert (format " %s" points-text))
+                ;; FIXME: Align isn't quite right yet when adding new item
+                (org-mark-subtree)
+                (align-regexp (region-beginning) (region-end)
+                              "\\(\\s-*\\)::" 1 align-default-spacing t)
+                (save-buffer)
+                (message "Updated %s" (file-name-nondirectory file)))
+            (message "Heading '%s' not found in %s" heading-name (file-name-nondirectory
+                                                                  file))))))))
+
+(defun my/grading-generate-summary-report ()
+  "Generate a summary grade report from all .org files in the 'students/' directory.
+ Calculates scores on the fly and prepares a buffer for PDF export."
+  (interactive)
+  (let ((files (directory-files "students" t "\\.org$"))
+        (results '()))
+    ;; 1. Iterate through all student files
+    (dolist (file files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((name "Unknown")
+              (total 0))
+          ;; Extract Student Name
+          (goto-char (point-min))
+          (if (re-search-forward "^\\*+ Student: \\(.*\\)" nil t)
+              (setq name (match-string 1)))
+
+          ;; Calculate Score (Sum all checked items with ":: points")
+          (goto-char (point-min))
+          (while (re-search-forward "^[ \t]*- \\[[xX]\\] .* :: \\(.*\\)" nil t)
+            (setq total (+ total (string-to-number (match-string 1)))))
+
+          (push (list name total) results))))
+
+    ;; 2. Sort results alphabetically by name
+    (setq results (sort results (lambda (a b) (string< (car a) (car b)))))
+
+    ;; 3. Create the Summary Buffer
+    (let ((buffer (get-buffer-create "*Grade Summary*")))
+      (with-current-buffer buffer
+        (erase-buffer)
+        ;; Insert Header for PDF Export
+        (insert "#+TITLE: Final Grade Report\n")
+        (insert "#+DATE: " (format-time-string "%Y-%m-%d") "\n")
+        (insert "#+OPTIONS: toc:nil\n")
+        (insert "#+LATEX_HEADER: \\usepackage{booktabs}\n\n") ;; Better table formatting
+
+        (insert "* Class Summary\n\n")
+
+        ;; Insert the Table with LaTeX attributes
+        (insert "#+ATTR_LATEX: :environment tabular :align l r :booktabs t\n")
+        (insert "| Student Name | Total Score |\n")
+        (insert "|--------------+-------------|\n")
+
+        (dolist (entry results)
+          (insert (format "| %s | %s |\n" (car entry) (cadr entry))))
+
+        ;; Align the table and enable Org mode
+        (org-mode)
+        (org-table-align)
+        (goto-char (point-min)))
+
+      ;; Display the buffer
+      (switch-to-buffer buffer))))
+
+(defun my/grading-distribution-histogram (&optional bin-size)
+  "Generate a grade distribution histogram (frequency table) and Gnuplot header.
+ BIN-SIZE defaults to 5 if not provided."
+  (interactive "nBin size (default 5): ")
+  (let ((size (if (or (not bin-size) (zerop bin-size)) 5 bin-size))
+        (files (directory-files "students" t "\\.org$"))
+        (scores '())
+        (max-score 0)
+        (frequencies (make-hash-table :test 'eq)))
+
+    ;; 1. Collect all scores
+    (dolist (file files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((total 0))
+          ;; Sum checked items
+          (goto-char (point-min))
+          (while (re-search-forward "^[ \t]*- \\[[xX]\\] .* :: \\(.*\\)" nil t)
+            (setq total (+ total (string-to-number (match-string 1)))))
+          (push total scores)
+          (setq max-score (max max-score total)))))
+
+    ;; 2. Calculate Frequencies
+    (dolist (score scores)
+      (let* ((bucket-floor (* (/ score size) size))
+             (current-count (gethash bucket-floor frequencies 0)))
+        (puthash bucket-floor (1+ current-count) frequencies)))
+
+    ;; 3. Output Table and Plot Header
+    (with-current-buffer (get-buffer-create "*Grade Distribution*")
+      (erase-buffer)
+      ;; Gnuplot configuration for a histogram style bar chart
+      (insert "#+TITLE: Grade Distribution\n")
+      (insert "#+ATTR_LATEX: :width 10cm\n")
+      (insert (format "#+PLOT: title:\"Grade Distribution (Bin Size: %d)\" ind:1 type:2d with:boxes set:\"style fill solid\" set:\"yrange [0:]\"\n" size))
+
+      (insert "| Range | Frequency |\n")
+      (insert "|-------+-----------|\n")
+
+      ;; Loop through bins from 0 to max-score
+      (let ((i 0))
+        (while (<= i max-score)
+          (let ((count (gethash i frequencies 0))
+                (range-label (format "%d-%d" i (+ i (- size 1)))))
+            (insert (format "| %s | %d |\n" range-label count)))
+          (setq i (+ i size))))
+
+      (org-mode)
+      (org-table-align)
+      (display-buffer (current-buffer))
+      (message "Press 'C-c \" g' inside the table to generate the graph."))))
+
+(defun my/grading-master-report (&optional bin-size)
+  "Generate a comprehensive Grade Report with distribution graph and student table.
+      BIN-SIZE defaults to 5."
+  (interactive "nBin size for histogram (default 5): ")
+  (let* ((size (if (or (not bin-size) (zerop bin-size)) 5 bin-size))
+         (files (directory-files "students" t "\\.org$"))
+         (student-data '()) ;; List of (Name . Score)
+         (frequencies (make-hash-table :test 'eq))
+         (max-score 0))
+
+    ;; --- 1. Data Collection ---
+    (dolist (file files)
+      (with-temp-buffer
+        (insert-file-contents file)
+        (let ((name "Unknown") (total 0))
+          ;; Extract Name
+          (goto-char (point-min))
+          (if (re-search-forward "^\\*+ Student: \\(.*\\)" nil t)
+              (setq name (match-string 1)))
+          ;; Calculate Score
+          (goto-char (point-min))
+          (while (re-search-forward "^[ \t]*- \\[[xX]\\] .* :: \\(.*\\)" nil t)
+            (setq total (+ total (string-to-number (match-string 1)))))
+
+          (push (cons name total) student-data)
+          (setq max-score (max max-score total)))))
+
+    ;; --- 2. Statistics & Binning ---
+    ;; Sort students alphabetically
+    (setq student-data (sort student-data (lambda (a b) (string< (car a) (car b)))))
+
+    ;; Fill histogram buckets
+    (dolist (item student-data)
+      (let* ((score (cdr item))
+             (bucket-floor (* (/ score size) size))
+             (current-count (gethash bucket-floor frequencies 0)))
+        (puthash bucket-floor (1+ current-count) frequencies)))
+
+    ;; --- 3. Generate Report Buffer ---
+    (let ((buffer (get-buffer-create "*Master Course Report*")))
+      (with-current-buffer buffer
+        (erase-buffer)
+
+        ;; Header
+        (insert "#+TITLE: Course Grade Report\n")
+        (insert "#+DATE: " (format-time-string "%Y-%m-%d") "\n")
+        (insert "#+LATEX_HEADER: \\usepackage{booktabs}\n")
+        (insert "#+OPTIONS: toc:nil\n\n")
+
+        ;; Section 1: Distribution Graph
+        (insert "* Grade Distribution\n")
+        (insert (format "Bin size: %d points\n\n" size))
+
+        (insert "#+NAME: distribution-table\n")
+        (insert "| Range | Frequency |\n")
+        (insert "|-------+-----------|\n")
+
+        (let ((i 0))
+          (while (<= i max-score)
+            (let ((count (gethash i frequencies 0))
+                  (range-label (format "%d-%d" i (+ i (- size 1)))))
+              (insert (format "| %s | %d |\n" range-label count)))
+            (setq i (+ i size))))
+
+        (insert "\n#+BEGIN_SRC gnuplot :var data=distribution-table :file grade_dist.png :results graphics file :exports results\n")
+        (insert "set title 'Grade Distribution'\n")
+        (insert "set style data histograms\n")
+        (insert "set style fill solid\n")
+        (insert "set yrange [0:*]\n")
+        (insert "set boxwidth 0.75\n")
+        (insert "set xlabel 'Score Range'\n")
+        (insert "set ylabel 'Frequency'\n")
+        (insert "plot data using 2:xtic(1) notitle\n")
+        (insert "#+END_SRC\n\n")
+
+        ;; Section 2: Student Table
+        (insert "* Student Scores\n")
+        (insert "#+ATTR_LATEX: :environment tabular :align l r :booktabs t\n")
+        (insert "| Student Name | Total Score |\n")
+        (insert "|--------------+-------------|\n")
+        (dolist (item student-data)
+          (insert (format "| %s | %s |\n" (car item) (cdr item))))
+
+        (org-mode)
+        (org-table-align)
+        (goto-char (point-min)))
+
+      (switch-to-buffer buffer)
+      (message "Report generated! Press 'C-c C-e l o' to export to PDF."))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
