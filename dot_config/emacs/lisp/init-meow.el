@@ -101,9 +101,11 @@
    '("(" . meow-backward-slurp)
    '("}" . meow-forward-barf)
    '("{" . meow-backward-barf)
-   '("<escape>" . ignore)))
+   '("<escape>" . ignore)
+   '("<tab>" . kirigami-toggle-fold)
+   '("<backtab>" . )))
 
-;; Magit/angle config adapted from
+;; Magit/angle config adapted from:
 ;; https://github.com/mclear-tools/dotemacs/blob/master/cpm-setup-meow.el
 (use-package meow
   :ensure t

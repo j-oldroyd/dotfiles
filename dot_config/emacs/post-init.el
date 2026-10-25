@@ -539,6 +539,27 @@
   :init
   (kirigami-global-mode 1))
 
+;; I use Meow with kirigami to emulate Org mode's folding functionality across
+;; modes.  Therefore, I want to toggle ALL folds as well.
+
+;; BEGIN_CLAUDE
+(defvar-local my/kirigami-all-folded-p nil
+  "Non-nil if the last bulk fold command in this buffer closed all folds.")
+
+(defun my/kirigami-toggle-folds (&optional arg)
+  "Toggle all folds in the buffer.
+With prefix ARG, force the direction: a positive number closes all
+folds, zero or a negative number opens all folds."
+  (interactive "P")
+  (let ((close (cond ((null arg) (not my/kirigami-all-folded-p))
+                     ((> (prefix-numeric-value arg) 0) t)
+                     (t nil))))
+    (if close
+        (kirigami-close-folds)
+      (kirigami-open-folds))
+    (setq my/kirigami-all-folded-p close)))
+;; END_CLAUDE
+
 ;; The built-in outline-minor-mode provides structured code folding in
 ;; modes such as Emacs Lisp and Python, allowing users to collapse and
 ;; expand sections based on headings or indentation levels. This
