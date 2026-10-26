@@ -5,6 +5,8 @@
 ;; My customizations for Meow.
 
 ;;; Code:
+(defvar my/meow-leader-map (make-sparse-keymap)
+  "A keymap specifically for use with Meow's leader state.")
 
 (defun meow-setup ()
   "Define keybindings for Meow."
@@ -16,10 +18,24 @@
    '("/" . consult-line)
    '("<escape>" . ignore))
   (meow-leader-define-key
+   ;; I use the leader key for accessing modes and mode keymaps.  This means,
+   ;; e.g., "SPC k" will NOT fall back to "C-c k" since I am using my own mode
+   ;; map for this.
+   ;;
    ;; SPC j/k will run the original command in MOTION state.
-   '("j" . "H-j")
+   '("b" . consult-buffer)
+   '("B" . ibuffer)
+   '("e" . mu4e)
+   (cons "i" cape-prefix-map) ; Mnemonic: (i)nsert completion
+   (cons "j" jinx-mode-map)
    '("k" . "H-k")
    '("/" . "H-/")
+   (cons "p" project-prefix-map)
+   '("r" . consult-ripgrep)
+   '("s" . isearch-forward)
+   '("t" . ghostel-project)
+   '("v" . magit-status) ; Mnemonic: (v)ersion control
+   (cons "w" window-prefix-map)
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -116,7 +132,9 @@
   :custom
   (meow-expand-exclude-mode-list '(markdown-mode))
   (meow-expand-hint-remove-delay 2.0)
+  (meow-keypad-leader-dispatch my/meow-leader-map)
   :config
+  (setf (alist-get 'leader meow-keymap-alist) my/meow-leader-map)
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?a . angle))
                                         ; LaTeX settings for meow. Taken from

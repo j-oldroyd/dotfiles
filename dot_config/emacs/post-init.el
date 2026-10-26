@@ -422,7 +422,7 @@
   ;; Disable all active themes
   (mapc #'disable-theme custom-enabled-themes)
   ;; Load the built-in theme
-  (load-theme 'modus-operandi t))
+  (load-theme 'leuven t))
 
 ;;; UI enhancements
 ;; Set the fringes to match the pixel height of a character.  This
@@ -691,6 +691,32 @@ folds, zero or a negative number opens all folds."
   (when (executable-find "rg")
     (setq dumb-jump-force-searcher 'rg)
     (setq dumb-jump-prefer-searcher 'rg)))
+
+;;; Writing
+;; Jinx and Olivetti are suggested by Emacs Bedrock.
+
+;; Jinx
+;;
+;; This requires the `libenchant' library, an external library installed using
+;; your favorite package manager.  Other useful commands: `jinx-occur' and and
+;; `jinx-correct-all'.
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
+
+;; Olivetti
+;;
+;; This package provides a nice writing environment in Emacs more akin to a
+;; standard word processor.  Useful commands: `olivetti-shrink/expand' and
+;; `olivetti-set-width'.
+(use-package olivetti
+  :ensure t)
+
+(use-package text-mode
+  :ensure nil
+  :hook
+  (text-mode . olivetti-mode))
 
 ;;; YASnippet
 ;; The official collection of snippets for yasnippet.
@@ -1340,3 +1366,7 @@ folds, zero or a negative number opens all folds."
 
 ;; (provide post-init.el)
 ;; post-init.el ends here
+
+;; Local Variables:
+;; jinx-languages: "en_US"
+;; End:
