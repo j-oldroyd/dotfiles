@@ -24,8 +24,7 @@
    '("b" . consult-buffer)
    '("B" . ibuffer)
    '("e" . mu4e)
-   ;; (cons "i" cape-prefix-map) ; Mnemonic: (i)nsert completion
-   (cons "j" jinx-mode-map)
+   ;; (cons "j" jinx-mode-map)
    '("k" . "H-k")
    '("/" . "H-/")
    (cons "p" project-prefix-map)
@@ -47,6 +46,10 @@
    '("0" . meow-digit-argument)
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet))
+  ;; Cape doesn't load right away, so this is a workaround.
+  (with-eval-after-load 'cape
+    (meow-leader-define-key
+     (cons "i" cape-prefix-map)))
   (meow-normal-define-key
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
