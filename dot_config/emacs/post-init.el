@@ -131,6 +131,7 @@
 ;; suite provides a convenient, comprehensive install option.  The variable
 ;; `casual-init-hook' controls which modules are enabled.  By default, all are
 ;; enabled.  This must be installed with package-install.
+;; TODO: Determine if I want to keep these.
 ;; (require 'casual)
 ;; (casual-init)
 
