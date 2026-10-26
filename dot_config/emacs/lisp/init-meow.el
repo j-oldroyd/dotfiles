@@ -24,7 +24,7 @@
    '("b" . consult-buffer)
    '("B" . ibuffer)
    '("e" . mu4e)
-   (cons "i" cape-prefix-map) ; Mnemonic: (i)nsert completion
+   ;; (cons "i" cape-prefix-map) ; Mnemonic: (i)nsert completion
    (cons "j" jinx-mode-map)
    '("k" . "H-k")
    '("/" . "H-/")
