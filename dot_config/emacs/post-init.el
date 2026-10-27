@@ -420,14 +420,39 @@
   :custom (project-vc-extra-root-markers '(".project")))
 
 ;;; Themes
+;; The settings below are taken from the GitHub page.
 (use-package ef-themes
-  :ensure t)
+  :ensure t
+  :init
+  ;; This makes the Modus commands listed below consider only the Ef
+  ;; themes.  For an alternative that includes Modus and all
+  ;; derivative themes (like Ef), enable the
+  ;; `modus-themes-include-derivatives-mode' instead.  The manual of
+  ;; the Ef themes has a section that explains all the possibilities:
+  ;;
+  ;; - Evaluate `(info "(ef-themes) Working with other Modus themes or taking over Modus")'
+  ;; - Visit <https://protesilaos.com/emacs/ef-themes#h:6585235a-5219-4f78-9dd5-6a64d87d1b6e>
+  ;; (ef-themes-take-over-modus-themes-mode 1)
+  (modus-themes-include-derivatives-mode 1)
+  :bind
+  (("<f5>" . modus-themes-rotate)
+   ("C-<f5>" . modus-themes-select)
+   ("M-<f5>" . modus-themes-load-random))
+  :config
+  ;; All customisations here.
+  (setq modus-themes-mixed-fonts t)
+  (setq modus-themes-italic-constructs t)
 
-(let ((inhibit-redisplay t))
-  ;; Disable all active themes
-  (mapc #'disable-theme custom-enabled-themes)
-  ;; Load the theme
-  (load-theme 'ef-dream t))
+  ;; Finally, load your theme of choice (or a random one with
+  ;; `modus-themes-load-random', `modus-themes-load-random-dark',
+  ;; `modus-themes-load-random-light').
+  (modus-themes-load-theme 'ef-dream))
+
+;; (let ((inhibit-redisplay t))
+;;   ;; Disable all active themes
+;;   (mapc #'disable-theme custom-enabled-themes)
+;;   ;; Load the theme
+;;   (load-theme 'ef-dream t))
 
 ;;; UI enhancements
 ;; Set the fringes to match the pixel height of a character.  This
@@ -1026,7 +1051,7 @@ folds, zero or a negative number opens all folds."
   :hook
   ((prog-mode . rainbow-delimiters-mode)))
 
-(setopt show-paren-style 'paren)
+(setopt show-paren-style 'parenthesis)
 (setopt show-paren-context-when-offscreen 'overlay)
 
 ;; For paredit+Evil mode users: enhances paredit with Evil mode compatibility
