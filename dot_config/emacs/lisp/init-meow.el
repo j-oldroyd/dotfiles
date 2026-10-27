@@ -13,6 +13,8 @@
   (interactive)
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-motion-define-key
+   '("j" . meow-next)
+   '("k" . meow-prev)
    '("/" . consult-line)
    '("<escape>" . ignore))
   (meow-leader-define-key

@@ -1,5 +1,6 @@
 ;;; post-init.el --- Very early initializations -*- no-byte-compile: t; lexical-binding: t; -*-
 
+
 ;;; Commentary:
 
 ;;; Code:
@@ -418,11 +419,15 @@
 (use-package project
   :custom (project-vc-extra-root-markers '(".project")))
 
+;;; Themes
+(use-package ef-themes
+  :ensure t)
+
 (let ((inhibit-redisplay t))
   ;; Disable all active themes
   (mapc #'disable-theme custom-enabled-themes)
-  ;; Load the built-in theme
-  (load-theme 'leuven t))
+  ;; Load the theme
+  (load-theme 'ef-dream t))
 
 ;;; UI enhancements
 ;; Set the fringes to match the pixel height of a character.  This
@@ -1014,6 +1019,15 @@ folds, zero or a negative number opens all folds."
   (emacs-lisp-mode . paredit-mode)
   :config
   (define-key paredit-mode-map (kbd "RET") nil))
+
+(use-package rainbow-delimiters
+  :ensure t
+  :defer t
+  :hook
+  ((prog-mode . rainbow-delimiters-mode)))
+
+(setopt show-paren-style 'paren)
+(setopt show-paren-context-when-offscreen 'overlay)
 
 ;; For paredit+Evil mode users: enhances paredit with Evil mode compatibility
 ;; --------------------------------------------------------------------------
