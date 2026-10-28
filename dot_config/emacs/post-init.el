@@ -689,6 +689,7 @@ folds, zero or a negative number opens all folds."
 (add-hook 'html-ts-mode-hook #'treesit-fold-mode)
 (add-hook 'bash-ts-mode-hook #'treesit-fold-mode)
 
+;;; Formatting
 ;; Apheleia is an Emacs package designed to run code formatters (e.g., Shfmt,
 ;; Black and Prettier) asynchronously without disrupting the cursor position.
 (use-package apheleia
@@ -696,7 +697,13 @@ folds, zero or a negative number opens all folds."
              apheleia-global-mode)
   :hook ((prog-mode . apheleia-mode)))
 
+(use-package format-all
+  :bind ("C-c M-i" . format-all-buffer)
+  :config
+  (setq-default format-all-formatters
+                '(("LaTeX" (latexindent "-m")))))
 
+;;; Navigation
 (use-package dumb-jump
   :commands dumb-jump-xref-activate
   :init
@@ -755,6 +762,13 @@ folds, zero or a negative number opens all folds."
   ((text-mode . olivetti-mode)
    (text-mode . visual-line-mode)))
 
+(use-package writegood-mode
+  :ensure t
+  :bind (("C-c C-w g" . writegood-grade-level)
+         ("C-c C-w r" . writegood-reading-ease))
+  :hook
+  (text-mode . writegood-mode))
+
 ;;; YASnippet
 ;; The official collection of snippets for yasnippet.
 (use-package yasnippet-snippets)
@@ -780,6 +794,79 @@ folds, zero or a negative number opens all folds."
 
   (yas-global-mode 1))
 
+(defun get-exercise-labels ()
+  "Helper function for ;xxref snippet.
+ This function finds labels for exercises created using XSIM."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((matches '()))
+      (while (re-search-forward "ID=\\([a-zA-Z0-9:\\-]*\\)" (point-max) t)
+        (push (match-string-no-properties 1) 'matches))
+      matches)))
+
+;; karthink's code for integrating CDLaTeX with YASnippet.  Taken from
+;; https://gist.github.com/karthink/7d89df35ee9b7ac0c93d0177b862dadb
+(use-package cdlatex
+  :hook ((cdlatex-tab . yas-expand)
+         (cdlatex-tab . cdlatex-in-yas-field)
+         (org-mode . turn-on-org-cdlatex))
+  :diminish cdlatex-mode
+  :diminish org-cdlatex-mode
+  :config
+  (use-package yasnippet
+    :bind (:map yas-keymap
+                ("<tab>" . yas-next-field-or-cdlatex)
+                ("TAB" . yas-next-field-or-cdlatex))
+    :config
+    (defun cdlatex-in-yas-field ()
+      ;; Check if we're at the end of the Yas field
+      (when-let* ((_ (overlayp yas--active-field-overlay))
+                  (end (overlay-end yas--active-field-overlay)))
+        (if (>= (point) end)
+            ;; Call yas-next-field if cdlatex can't expand here
+            (let ((s (thing-at-point 'sexp)))
+              (unless (and s (assoc (substring-no-properties s)
+                                    cdlatex-command-alist-comb))
+                (yas-next-field-or-maybe-expand)
+                t))
+          ;; otherwise expand and jump to the correct location
+          (let (cdlatex-tab-hook minp)
+            (setq minp
+                  (min (save-excursion (cdlatex-tab)
+                                       (point))
+                       (overlay-end yas--active-field-overlay)))
+            (goto-char minp) t))))
+
+    (defun yas-next-field-or-cdlatex nil
+      "Jump to the next Yas field correctly with cdlatex active."
+      (interactive)
+      (if
+          (or (bound-and-true-p cdlatex-mode)
+              (bound-and-true-p org-cdlatex-mode))
+          (cdlatex-tab)
+        (yas-next-field-or-maybe-expand)))))
+
+;; Try to set up auto-expansion for certain snippets.
+;; Taken from
+;; https://www.reddit.com/r/emacs/comments/o5ewqc/is_automatic_snippet_expansion_with_yasnippet/
+(defun my/yas-try-expanding-auto-snippets ()
+  (when yas-minor-mode
+    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+      (yas-expand))))
+(add-hook 'post-command-hook #'my/yas-try-expanding-auto-snippets)
+
+;; Enable LaTeX snippets in org-mode.  See
+;; https://emacs.stackexchange.com/questions/38429/yasnippets-loading-two-major-modes-org-mode-and-latex
+;; My snippets are currently in LaTeX-mode, so this might not work...
+(defun my/org-latex-yas ()
+  "Activate org and LaTeX yas expansion in org-mode buffers."
+  (yas-minor-mode)
+  (yas-activate-extra-mode 'latex-mode))
+
+(add-hook 'org-mode-hook #'my/org-latex-yas)
+
+;;; Whitespace
 ;; The stripspace Emacs package provides stripspace-local-mode, a
 ;; minor mode that automatically removes trailing whitespace and blank
 ;; lines at the end of the buffer when saving.
@@ -1142,9 +1229,6 @@ folds, zero or a negative number opens all folds."
   (electric-pair-mode 1))
 
 ;;; Misc
-;; Set the maximum level of syntax highlighting for Tree-sitter modes
-(setq treesit-font-lock-level 4)
-
 (use-package which-key
   :ensure nil
   :init
@@ -1347,6 +1431,14 @@ folds, zero or a negative number opens all folds."
 (use-package magit
   :bind (("C-x g" . magit-status)))
 
+;; View tracked files in `magit-dispatch'
+(with-eval-after-load "magit"
+  (magit-add-section-hook
+   'magit-status-sections-hook
+   'magit-insert-tracked-files
+   nil
+   'append))
+
 ;; magit-todos
 ;; Place todos in git-tracked files and have them appear in
 ;; magit-status.  See magit-todos-keywords-list.
@@ -1411,11 +1503,14 @@ folds, zero or a negative number opens all folds."
 
 (require 'init-mail)
 
+;; PDF and EPUB
+(require 'init-docs)
+
+;; LaTeX
+(require 'init-latex)
+
+;; Lean4
+(require 'init-lean)
+
 ;; (provide post-init.el)
 ;; post-init.el ends here
-
-;; Local Variables:
-;; jinx-languages: "en_US"
-;; End:
-(require 'init-pdf)
-(require 'init-latex)
