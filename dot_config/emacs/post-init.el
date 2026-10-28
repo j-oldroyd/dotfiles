@@ -480,7 +480,12 @@
 ;; Enable adaptive-wrap to indent wrapped lines in modes that do not use
 ;; `auto-fill-mode'
 (use-package adaptive-wrap
-  :ensure t)
+  :ensure t
+  ;; Turn off auto-fill in text-base modes.
+  :hook
+  ((text-mode . (lambda ()
+                  (auto-fill-mode -1)
+                  (adaptive-wrap-prefix-mode t)))))
 
 ;; Display the current line and column numbers in the mode line
 (setq line-number-mode t)
@@ -744,9 +749,11 @@ folds, zero or a negative number opens all folds."
   :ensure t)
 
 (use-package text-mode
+  ;; Basic settings for text files.
   :ensure nil
   :hook
-  (text-mode . olivetti-mode))
+  ((text-mode . olivetti-mode)
+   (text-mode . visual-line-mode)))
 
 ;;; YASnippet
 ;; The official collection of snippets for yasnippet.
@@ -1134,6 +1141,7 @@ folds, zero or a negative number opens all folds."
   :init
   (electric-pair-mode 1))
 
+;;; Misc
 ;; Set the maximum level of syntax highlighting for Tree-sitter modes
 (setq treesit-font-lock-level 4)
 
@@ -1409,3 +1417,5 @@ folds, zero or a negative number opens all folds."
 ;; Local Variables:
 ;; jinx-languages: "en_US"
 ;; End:
+(require 'init-pdf)
+(require 'init-latex)
