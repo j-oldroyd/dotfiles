@@ -423,6 +423,7 @@
 ;; The settings below are taken from the GitHub page.
 (use-package ef-themes
   :ensure t
+  :demand t
   :init
   ;; This makes the Modus commands listed below consider only the Ef
   ;; themes.  For an alternative that includes Modus and all
@@ -434,6 +435,7 @@
   ;; - Visit <https://protesilaos.com/emacs/ef-themes#h:6585235a-5219-4f78-9dd5-6a64d87d1b6e>
   ;; (ef-themes-take-over-modus-themes-mode 1)
   (modus-themes-include-derivatives-mode 1)
+
   :bind
   (("<f5>" . modus-themes-rotate)
    ("C-<f5>" . modus-themes-select)
@@ -443,16 +445,22 @@
   (setq modus-themes-mixed-fonts t)
   (setq modus-themes-italic-constructs t)
 
+  ;; Make expression style compatible with ef-themes
+  ;; BEGIN_CLAUDE
+  (defun my/ef-themes-paren-expression-face ()
+    (ef-themes-with-colors
+      (set-face-attribute 'show-paren-match-expression nil
+                          :background bg-added
+                          :foreground 'unspecified
+                          :inherit nil)))
+  ;; END_CLAUDE
+
   ;; Finally, load your theme of choice (or a random one with
   ;; `modus-themes-load-random', `modus-themes-load-random-dark',
   ;; `modus-themes-load-random-light').
-  (modus-themes-load-theme 'ef-dream))
-
-;; (let ((inhibit-redisplay t))
-;;   ;; Disable all active themes
-;;   (mapc #'disable-theme custom-enabled-themes)
-;;   ;; Load the theme
-;;   (load-theme 'ef-dream t))
+  (modus-themes-load-theme 'ef-dream)
+  :hook
+  (modus-themes-after-load-theme . my/ef-themes-paren-expression-face))
 
 ;;; UI enhancements
 ;; Set the fringes to match the pixel height of a character.  This
@@ -1145,7 +1153,7 @@ folds, zero or a negative number opens all folds."
   :hook
   ((prog-mode . rainbow-delimiters-mode)))
 
-(setopt show-paren-style 'parenthesis)
+(setopt show-paren-style 'expression)
 (setopt show-paren-context-when-offscreen 'overlay)
 
 ;; For paredit+Evil mode users: enhances paredit with Evil mode compatibility
@@ -1511,6 +1519,9 @@ folds, zero or a negative number opens all folds."
 
 ;; Lean4
 (require 'init-lean)
+
+;; Grading
+(require 'init-grading)
 
 ;; (provide post-init.el)
 ;; post-init.el ends here

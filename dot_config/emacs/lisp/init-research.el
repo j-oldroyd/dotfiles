@@ -16,7 +16,11 @@
          ("C-c n i" . org-roam-node-insert)
          ("C-c n c" . org-roam-capture)
          ;; Dailies for journaling
-         ("C-c n j" . org-roam-dailies-capture-date))
+         ("C-c n j" . org-roam-dailies-capture-date)
+         ;; Open note for bib file
+         ("C-c n b" . citar-open)
+         ;; Helper functions
+         ("C-c n u" . my/org-roam-update-metadata))
   :config
   ;; If you're using a vertical completion framework, you might want a
   ;; more informative completion interface
@@ -45,18 +49,74 @@
          ;;  "%<%Y%m%d%H%M%S>-${slug}.org"
          ;;  "#+title: ${note-title}\n")
          :unnarrowed t)
+        ;; BEGIN_GEMINI
         ("r" "reference note" plain
          "%?"
+         :clock-in t
+         :clock-resume t
          :target
          (file+head
-          "%(expand-file-name (or citar-org-roam-subdir \"\") org-roam-directory)/${citar-citekey}.org"
-          "#+title: ${citar-citekey}. ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n* Main idea(s) and keywords\n* Key definition(s)\n* Key results\n* Questions and follow-ups")
+          "%(expand-file-name (or citar-org-roam-subdir \"\")
+                org-roam-directory)/${citar-citekey}.org"
+          ":PROPERTIES:\n:ROAM_REFS:\n:END:\n#+title: ${citar-title}\n#+filetags: :${citar-type}:\n#+created: %U\n\n* Metadata\n- Last Modified: %U\n- Author: ${citar-author}\n- Year: ${citar-date}\n- Pages: ${citar-pages}\n- URL: ${citar-url}\n- Status: %^{Status|Reading|Completed|Abandoned|To Read}\n- Progress: %^{Progress|0|50|100}\n- Rating: %^{Rating|N/A|★☆☆☆☆|★★☆☆☆|★★★☆☆|★★★★☆|★★★★★}\n- Date Finished: %U\n\n\n* Summary\n\n* Key Definitions & Takeaways\n\n* Detailed Notes & Breakdown\n** %^{Division|Section|Chapter} 1\n\n* Atomic Concepts & Links\n\n* Quotes & Highlights\n#+begin_quote\n\n#+end_quote\n")
          :unnarrowed t)
+        ;; END_GEMINI
         ("a" "article" plain "%?"
          :if-new
          (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
          :immediate-finish t
          :unnarrowed t)))
+
+;; Helper functions for updating reference nodes
+;; BEGIN_GEMINI
+(defun my/org-roam-update-bullet (field value)
+  "Search for '- FIELD: ...' bullet point in the current buffer and replace its VALUE."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward (format "^-[ \t]*%s:[ \t]*.*$" (regexp-quote field)) nil t)
+        (replace-match (format "- %s: %s" field value))
+      ;; Append field under * Metadata heading if it does not exist yet
+      (when (re-search-forward "^\\* Metadata" nil t)
+        (forward-line 1)
+        (insert (format "- %s: %s\n" field value))))))
+
+(defun my/org-roam-update-metadata ()
+  "Interactively prompt to update Status, Rating, Date Finished, and Last Modified."
+  (interactive)
+  (let* ((status (completing-read "Status: " '("Reading" "Completed" "Abandoned" "To Read") nil t))
+         (progress (read-string "Progress: " "0" nil t))
+         (rating (completing-read "Rating: " '("N/A" "★☆☆☆☆" "★★☆☆☆" "★★★☆☆" "★★★★☆" "★★★★★") nil t))
+         (timestamp (format-time-string "[%Y-%m-%d %a %H:%M]")))
+
+    ;; Update bullet list metadata
+    (my/org-roam-update-bullet "Status" status)
+    (my/org-roam-update-bullet "Rating" rating)
+    (my/org-roam-update-bullet "Progress" progress)
+    (my/org-roam-update-bullet "Last Modified" timestamp)
+
+    ;; Set Date Finished automatically if marked Completed
+    (when (string-equal status "Completed")
+      (my/org-roam-update-bullet "Date Finished" timestamp))
+
+    ;; Update top-level property drawer
+    (org-with-point-at 1
+      (org-entry-put (point) "LAST_MODIFIED" timestamp))
+
+    (message "Metadata updated.")))
+
+(defun my/org-roam-auto-update-last-modified ()
+  "Automatically update the :LAST_MODIFIED: property in top property drawer on save."
+  (when (and (derived-mode-p 'org-mode)
+             (buffer-file-name)
+             (bound-and-true-p org-roam-directory)
+             (string-prefix-p (expand-file-name org-roam-directory)
+                              (expand-file-name (buffer-file-name))))
+    (save-excursion
+      (org-with-point-at 1
+        (org-entry-put (point) "LAST_MODIFIED" (format-time-string "[%Y-%m-%d %a %H:%M]"))))))
+
+(add-hook 'before-save-hook #'my/org-roam-auto-update-last-modified)
+;; #+END_GEMINI
 
 ;; org-roam-ui defaults taken from GitHub
 (use-package org-roam-ui

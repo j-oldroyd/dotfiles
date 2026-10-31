@@ -22,6 +22,17 @@
   (TeX-master nil)
   (adaptive-wrap-extra-indent 2))
 
+;; Enables rainbow-highlighters for LaTeX.
+;; (add-hook 'LaTeX-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'TeX-mode-hook #'rainbow-delimiters-mode)
+
+;; Remove error/help windows when no longer needed.
+(defun TeX-error-install-delete-window-hook ()
+  "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
+  (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
+
+(add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
+
 ;; AUCTeX's live preview requires ghostscript, so we tell AUCTeX where to
 ;; find it on macOS. Live preview on Windows is very troublesome, so we
 ;; don't worry about it.
