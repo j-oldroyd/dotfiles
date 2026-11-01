@@ -813,67 +813,6 @@ folds, zero or a negative number opens all folds."
         (push (match-string-no-properties 1) 'matches))
       matches)))
 
-;; karthink's code for integrating CDLaTeX with YASnippet.  Taken from
-;; https://gist.github.com/karthink/7d89df35ee9b7ac0c93d0177b862dadb
-(use-package cdlatex
-  :hook ((cdlatex-tab . yas-expand)
-         (cdlatex-tab . cdlatex-in-yas-field)
-         (org-mode . turn-on-org-cdlatex))
-  :diminish cdlatex-mode
-  :diminish org-cdlatex-mode
-  :config
-  (use-package yasnippet
-    :bind (:map yas-keymap
-                ("<tab>" . yas-next-field-or-cdlatex)
-                ("TAB" . yas-next-field-or-cdlatex))
-    :config
-    (defun cdlatex-in-yas-field ()
-      ;; Check if we're at the end of the Yas field
-      (when-let* ((_ (overlayp yas--active-field-overlay))
-                  (end (overlay-end yas--active-field-overlay)))
-        (if (>= (point) end)
-            ;; Call yas-next-field if cdlatex can't expand here
-            (let ((s (thing-at-point 'sexp)))
-              (unless (and s (assoc (substring-no-properties s)
-                                    cdlatex-command-alist-comb))
-                (yas-next-field-or-maybe-expand)
-                t))
-          ;; otherwise expand and jump to the correct location
-          (let (cdlatex-tab-hook minp)
-            (setq minp
-                  (min (save-excursion (cdlatex-tab)
-                                       (point))
-                       (overlay-end yas--active-field-overlay)))
-            (goto-char minp) t))))
-
-    (defun yas-next-field-or-cdlatex nil
-      "Jump to the next Yas field correctly with cdlatex active."
-      (interactive)
-      (if
-          (or (bound-and-true-p cdlatex-mode)
-              (bound-and-true-p org-cdlatex-mode))
-          (cdlatex-tab)
-        (yas-next-field-or-maybe-expand)))))
-
-;; Try to set up auto-expansion for certain snippets.
-;; Taken from
-;; https://www.reddit.com/r/emacs/comments/o5ewqc/is_automatic_snippet_expansion_with_yasnippet/
-(defun my/yas-try-expanding-auto-snippets ()
-  (when yas-minor-mode
-    (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
-      (yas-expand))))
-(add-hook 'post-command-hook #'my/yas-try-expanding-auto-snippets)
-
-;; Enable LaTeX snippets in org-mode.  See
-;; https://emacs.stackexchange.com/questions/38429/yasnippets-loading-two-major-modes-org-mode-and-latex
-;; My snippets are currently in LaTeX-mode, so this might not work...
-(defun my/org-latex-yas ()
-  "Activate org and LaTeX yas expansion in org-mode buffers."
-  (yas-minor-mode)
-  (yas-activate-extra-mode 'latex-mode))
-
-(add-hook 'org-mode-hook #'my/org-latex-yas)
-
 ;;; Whitespace
 ;; The stripspace Emacs package provides stripspace-local-mode, a
 ;; minor mode that automatically removes trailing whitespace and blank
