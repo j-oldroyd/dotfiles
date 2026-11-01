@@ -11,6 +11,11 @@
 (require 'subr-x)
 
 ;;; Rubrics
+(defgroup grading nil
+  "Grading and learning-outcome tracking in Org mode."
+  :group 'org
+  :prefix "grading-")
+
 ;; Layout assumed (see rubrics.org and gradebook-template.org):
 ;;
 ;;   rubrics.org         * Q1                       <- question
@@ -26,9 +31,10 @@
 ;; every student's criteria, adds criteria that are new, and never touches
 ;; :SCORE: or the entry body (your feedback).
 
-(defcustom grading-rubric-file "rubrics.org"
+(defcustom grading-rubric-file "rubric.org"
   "Master rubric file, relative to the gradebook's directory."
-  :type 'file)
+  :type 'file
+  :group 'grading)
 
 (defun grading--rubric ()
   "Return an alist (QUESTION . CRITERIA) read from `grading-rubric-file'.
@@ -83,8 +89,9 @@ Each criterion is a plist with keys :id, :title, :tags and :max."
 
 (defun grading-add-student (name)
   "Add a heading for NAME below the current heading, built from the master rubric.
-Call with point on the exam heading.  This replaces the simpler
-version in grading.el."
+Call with point on the exam heading.  See also
+`grading-add-student-from-template' for the simpler, template-based
+version."
   (interactive "sStudent: ")
   (let ((level (1+ (org-current-level))))
     (grading--insert-at-subtree-end
@@ -162,7 +169,8 @@ alone and listed in the *grading-sync* buffer."
 
 (defcustom grading-outcome-regexp "^LO[0-9]+$"
   "Tags matching this regexp are treated as learning outcomes."
-  :type 'regexp)
+  :type 'regexp
+  :group 'grading)
 
 (defcustom grading-questions
   '(("Q1" ("LO1") 10)
@@ -170,11 +178,13 @@ alone and listed in the *grading-sync* buffer."
     ("Q3" ("LO3") 15))
   "Question template used by `grading-add-student'.
 Each entry is (TITLE (OUTCOME-TAGS...) MAX-POINTS)."
-  :type '(repeat (list string (repeat string) integer)))
+  :type '(repeat (list string (repeat string) integer))
+  :group 'grading)
 
 (defcustom grading-student-level 2
   "Outline level of the headings that name students."
-  :type 'integer)
+  :type 'integer
+  :group 'grading)
 
 (defun grading--student-at-point ()
   "Return the title of the ancestor heading at `grading-student-level'."
@@ -249,8 +259,10 @@ Each entry is (TITLE (OUTCOME-TAGS...) MAX-POINTS)."
   (forward-line -1)
   (org-table-align))
 
-(defun grading-add-student (name)
-  "Add a heading for NAME, with the questions in `grading-questions', below point."
+(defun grading-add-student-from-template (name)
+  "Add a heading for NAME, with the questions in `grading-questions', below point.
+This is the simple template-based version.  `grading-add-student' (defined
+above) builds the student from the master rubric instead."
   (interactive "sStudent: ")
   (let* ((level (1+ (or (org-current-level) 0)))
          (stars (make-string level ?*))
