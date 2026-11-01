@@ -27,11 +27,12 @@
 (add-hook 'TeX-mode-hook #'rainbow-delimiters-mode)
 
 ;; Remove error/help windows when no longer needed.
-(defun TeX-error-install-delete-window-hook ()
+(defun my/TeX-error-install-delete-window-hook ()
   "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
   (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
 
-(add-hook 'TeX-error-overview-mode-hook #'TeX-error-install-delete-window-hook)
+(add-hook 'TeX-error-overview-mode-hook
+          #'my/TeX-error-install-delete-window-hook)
 
 ;; AUCTeX's live preview requires ghostscript, so we tell AUCTeX where to
 ;; find it on macOS. Live preview on Windows is very troublesome, so we
@@ -55,8 +56,8 @@
   (TeX-source-correlate-start-server t)
   (TeX-source-correlate-method (quote synctex))
   ;; Update PDF buffers after successful TeX runs
-  :hook
-  (TeX-after-compilation-finished-functions . TeX-revert-document-buffer))
+  :config
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 ;;; Buffer settings
 ;; I want TeX windows to display on right even when using Olivetti.
