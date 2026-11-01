@@ -16,7 +16,7 @@
 
   :config
   (require 'oc-csl)                     ; citation support
-  (add-to-list 'org-export-backends 'md)
+  (require 'ox-md)
 
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
@@ -304,6 +304,7 @@
       ;; Display the buffer
       (switch-to-buffer buffer))))
 
+;; TODO: Remove this if I switch to new grading config.
 (defun my/grading-distribution-histogram (&optional bin-size)
   "Generate a grade distribution histogram (frequency table) and Gnuplot header.
  BIN-SIZE defaults to 5 if not provided."
@@ -312,7 +313,7 @@
         (files (directory-files "students" t "\\.org$"))
         (scores '())
         (max-score 0)
-        (frequencies (make-hash-table :test 'eq)))
+        (frequencies (make-hash-table :test 'equal)))
 
     ;; 1. Collect all scores
     (dolist (file files)
