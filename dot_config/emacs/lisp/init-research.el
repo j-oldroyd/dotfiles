@@ -142,6 +142,7 @@
   (bib-file my/bibliography-file))
 
 (use-package org
+  :ensure nil
   :custom
   (org-cite-global-bibliography (list my/bibliography-file))
   (org-cite-insert-processor 'citar)

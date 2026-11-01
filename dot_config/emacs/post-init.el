@@ -417,6 +417,7 @@
 
 ;;; Project enhancements
 (use-package project
+  :ensure nil
   :custom (project-vc-extra-root-markers '(".project")))
 
 ;;; Themes

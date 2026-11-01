@@ -8,6 +8,7 @@
 ;;; Code:
 ;; From Emacs Bedrock
 (use-package org
+  :ensure nil
   :bind (:map global-map
               ("C-c l" . org-store-link)
               ("C-c a" . 'org-agenda)
@@ -106,19 +107,20 @@
   :ensure t)
 
 ;;; Org exporters
-(require 'ox-latex)
-(add-to-list 'org-latex-classes
-             '("wvwcslides"
-               "\\documentclass{wvwcslides}
+(use-package org
+  :config
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("wvwcslides"
+                 "\\documentclass{wvwcslides}
                [NO-DEFAULT-PACKAGES]
                [PACKAGES]
                [EXTRA]"
-               ("\\section{%s}" . "\\section*{%s}")
-               ("\\subsection{%s}" . "\\subsection*{%s}")
-               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-               ("\\paragraph{%s}" . "\\paragraph*{%s}")
-               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;;; GTD
 ;; org-gtd implements an opinionated GTD workflow into Org mode.
@@ -173,11 +175,14 @@
 
 ;;; Org babel
 ;; Org babel integrates coding into Org mode documents.
-(org-babel-do-load-languages
- 'org-babel-load-languages '((octave . t)
-                             (gnuplot . t)
-                             (python . t)
-                             (latex . t)))
+(use-package org
+  :ensure nil
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((octave . t)
+                               (gnuplot . t)
+                               (python . t)
+                               (latex . t))))
 
 ;;; Assessment
 ;; I use Org mode for grading homework assignments and tests.  These are helper

@@ -6,7 +6,8 @@
 ;; Claude-produced code at this point.
 
 ;;; Code:
-(require 'org)
+(use-package org
+  :ensure nil)
 (require 'cl-lib)
 (require 'subr-x)
 
@@ -31,7 +32,7 @@
 ;; every student's criteria, adds criteria that are new, and never touches
 ;; :SCORE: or the entry body (your feedback).
 
-(defcustom grading-rubric-file "rubric.org"
+(defcustom grading-rubric-file "rubrics.org"
   "Master rubric file, relative to the gradebook's directory."
   :type 'file
   :group 'grading)
