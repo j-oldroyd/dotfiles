@@ -1476,17 +1476,18 @@ folds, zero or a negative number opens all folds."
   )
 
 ;;; Modules
-;; Modules can be loaded individually (default) or recurseively.  I
+;; Modules can be loaded individually (default) or recursively.  I
 ;; choose to load them individually in order to make debugging easier.
 
 ;; Load path settings
-(setq user-init-directory (expand-file-name "lisp" "~/.config/emacs"))
-(add-to-list 'load-path user-init-directory)
+(setq my/init-directory (expand-file-name "lisp" "~/.config/emacs"))
+(add-to-list 'load-path my/init-directory)
 
 ;; Custom variables
 (require 'init-custom)
 (when (file-exists-p custom-file)
-  (load custom-file))
+  (load custom-file 'noerror 'nomessage))
+(my/apply-custom-values)
 
 ;; Meow provides a modal editing system for Emacs along the lines of Kakoune.
 (require 'init-meow)
@@ -1506,8 +1507,8 @@ folds, zero or a negative number opens all folds."
 ;; Email
 ;; Variables to configure:
 ;;
-;; `user-professional-email', `user-semi-professional-email',
-;; `user-personal-email', `user-mail-names'
+;; `my/professional-email', `my/semi-professional-email',
+;; `my/personal-email', `my/mail-names'
 
 (require 'init-mail)
 

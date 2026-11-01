@@ -7,14 +7,14 @@
 ;;; Code:
 
 ;; `mu4e' is installed with mu, and so we load it from where it's installed.
-;; This value is stored in the custom variable `user-mu4e-path'.  We also need
+;; This value is stored in the custom variable `my/mu4e-path'.  We also need
 ;; to make sure Elpaca doesn't mess with it since Elpaca can't find it on
 ;; (M)ELPA.  We disable Elpaca for `nano-mu4e' as well, as it depends on `mu4e'
 ;; and then Elpaca tries to find it again.
 (use-package mu4e
   :ensure nil
   :elpaca nil
-  :load-path user-mu4e-path
+  :load-path my/mu4e-path
   ;; :vc t ;; adds symlink to elpa dir
   :bind (("C-c M" . mu4e))
   :config
@@ -87,7 +87,7 @@
                                  (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
                  :vars `((mu4e-trash-folder . "/gmail/[Gmail]/Trash")
                          (mu4e-refile-folder . "/gmail/[Gmail]/Archive")
-                         (user-mail-address . ,user-semi-professional-email)
+                         (user-mail-address . ,my/semi-professional-email)
                          (mu4e-maildir-shortcuts . ( ("/gmail/INBOX" . ?i)))))
                 (make-mu4e-context
                  :name "wvwc-mail"
@@ -96,7 +96,7 @@
                                  (string-prefix-p "/wvwc-mail" (mu4e-message-field msg :maildir))))
                  :vars `((mu4e-trash-folder . "/wvwc-mail/[wvwc-mail]/Trash")
                          (mu4e-refile-folder . "/wvwc-mail/[wvwc-mail]/Archive")
-                         (user-mail-address . ,user-professional-email)
+                         (user-mail-address . ,my/professional-email)
                          (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
                 (make-mu4e-context
                  :name "icloud"
@@ -105,7 +105,7 @@
                                  (string-prefix-p "/icloud" (mu4e-message-field msg :maildir))))
                  :vars `((mu4e-trash-folder . "/icloud/Deleted Messages")
                          (mu4e-refile-folder . "/icloud/Archive")
-                         (user-mail-address . ,user-personal-email)
+                         (user-mail-address . ,my/personal-email)
                          (mu4e-maildir-shortcuts . ( ("/icloud/INBOX" . ?i))))))))
 
    ((eq system-type 'gnu/linux)
@@ -122,7 +122,7 @@
                                  (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
                  :vars `((mu4e-trash-folder . "/wvwc-mail/[Gmail]/Trash")
                          (mu4e-refile-folder . "/wvwc-mail/[Gmail]/Archive")
-                         (user-mail-address . ,user-professional-email)
+                         (user-mail-address . ,my/professional-email)
                          (mu4e-maildir-shortcuts . ( ("/wvwc-mail/INBOX" . ?i)))))
                 (make-mu4e-context
                  :name "math-gmail"
@@ -131,7 +131,7 @@
                                  (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
                  :vars `((mu4e-trash-folder . "/math-gmail/[Gmail]/Trash")
                          (mu4e-refile-folder . "/math-gmail/[Gmail]/Archive")
-                         (user-mail-address . ,user-semi-professional-email)
+                         (user-mail-address . ,my/semi-professional-email)
                          (mu4e-maildir-shortcuts . ( ("/math-gmail/INBOX" . ?i))))))))))
 
 ;; Headers can be misaligned with columns in header view, so this code from
@@ -174,7 +174,7 @@
   (org-msg-greeting-fmt "\nHi%s,\n\n")
   ;; The code below demonstrates how to set recipient names, but for privacy
   ;; reasons I define these elsewhere.
-  (org-msg-recipient-names user-mail-names)
+  (org-msg-recipient-names my/mail-names)
   (org-msg-greeting-name-limit 3)
   (org-msg-default-alternatives '((new          . (text html))
                                   (reply-to-html     . (text html))

@@ -55,9 +55,10 @@
   (elpaca-use-package-mode))
 
 ;; Cloud storage
-(defcustom user-cloud-storage "~/Google Drive"
+(defcustom my/cloud-storage "~/Google Drive"
   "Cloud storage directory."
-  :type 'directory)
+  :type 'directory
+  :group 'my-config)
 
 ;;; (provide pre-init.el)
 ;;; pre-init.el ends here

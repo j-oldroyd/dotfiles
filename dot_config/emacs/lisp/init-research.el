@@ -31,7 +31,7 @@
   (require 'org-roam-protocol)
 
   :custom
-  (org-roam-directory (expand-file-name "org/roam" user-cloud-storage))
+  (org-roam-directory (expand-file-name "org/roam" my/cloud-storage))
   ;; Dailies setup
   (org-roam-dailies-directory "daily/")
   (org-roam-dailies-capture-templates
@@ -139,11 +139,11 @@
   ;; Elpaca seems to yell if I don't set :ensure nil.
   :ensure nil
   :custom
-  (bib-file user-bibliography-file))
+  (bib-file my/bibliography-file))
 
 (use-package org
   :custom
-  (org-cite-global-bibliography (list user-bibliography-file))
+  (org-cite-global-bibliography (list my/bibliography-file))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar))
@@ -152,8 +152,8 @@
   :ensure t
   :diminish
   :custom
-  (citar-library-paths `( ,(expand-file-name "research" user-cloud-storage)))
-  (citar-notes-paths `( ,(expand-file-name "research" user-cloud-storage)))
+  (citar-library-paths `( ,(expand-file-name "research" my/cloud-storage)))
+  (citar-notes-paths `( ,(expand-file-name "research" my/cloud-storage)))
   (citar-bibliography org-cite-global-bibliography)
   (citar-org-roam-subdir "references")
   (bibtex-dialect "biblatex")
