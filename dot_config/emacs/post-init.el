@@ -761,7 +761,8 @@ folds, zero or a negative number opens all folds."
 ;; standard word processor.  Useful commands: `olivetti-shrink/expand' and
 ;; `olivetti-set-width'.
 (use-package olivetti
-  :ensure t)
+  :ensure t
+  :custom (olivetti-body-width 92))
 
 (use-package text-mode
   ;; Basic settings for text files.
