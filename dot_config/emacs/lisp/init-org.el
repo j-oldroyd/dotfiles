@@ -6,18 +6,35 @@
 ;; Emacs Bedrock.
 
 ;;; Code:
-;; From Emacs Bedrock
+;; Org mode is a major mode designed for organizing notes, planning, task
+;; management, and authoring documents using plain text with a simple and
+;; expressive markup syntax. It supports hierarchical outlines, TODO lists,
+;; scheduling, deadlines, time tracking, and exporting to multiple formats
+;; including HTML, LaTeX, PDF, and Markdown.
 (use-package org
-  :ensure nil
+  ;; Right now Elpaca manages Org mode and installs the latest version.
+  :ensure (:wait t)
+  :commands (org-mode org-version)
   :bind (:map global-map
               ("C-c l" . org-store-link)
               ("C-c a" . 'org-agenda)
               ("C-c c" . 'org-capture)
               ("C-c b" . 'org-switchb))
-
+  :mode
+  ("\\.org\\'" . org-mode)
+  :init
+  (setq org-hide-leading-stars t)
+  (setq org-startup-indented t)
+  (setq org-adapt-indentation nil)
+  (setq org-edit-src-content-indentation 0)
+  ;; (setq org-fontify-done-headline t)
+  ;; (setq org-fontify-todo-headline t)
+  ;; (setq org-fontify-whole-heading-line t)
+  ;; (setq org-fontify-quote-and-verse-blocks t)
+  (setq org-startup-truncated t)
   :config
-  (require 'oc-csl)                     ; citation support
-  (require 'ox-md)
+  ;; Citation support
+  (require 'oc-csl)
 
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
@@ -25,11 +42,30 @@
   ;; Make exporting quotes better
   (setq org-export-with-smart-quotes t)
 
-  ;; Toggle TeX input method with C-\
-  (setq default-input-method "TeX")
+  ;; Exporters
+  (require 'ox-md)
+  (require 'ox-latex)
+  (add-to-list 'org-latex-classes
+               '("wvwcslides"
+                 "\\documentclass{wvwcslides}
+               [NO-DEFAULT-PACKAGES]
+               [PACKAGES]
+               [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+  ;; Org Babel settings
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((octave . t)
+                               (gnuplot . t)
+                               (python . t)
+                               (latex . t)))
 
   :hook ((org-mode . visual-line-mode)  ; wrap lines at word breaks
-         (org-mode . flyspell-mode)    ; spell checking!
+         (org-mode . jinx-mode)    ; spell checking!
          (org-mode . toggle-input-method))
 
   :custom
@@ -56,7 +92,14 @@
      ("f" "Fleeting note" entry  (file org-default-notes-file)
       "* TODO %^{Note title}\nContext: %a\n%?" :empty-lines-before 1 )
      ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-      "** NEXT %? \nDEADLINE: %t"))))
+      "** NEXT %? \nDEADLINE: %t")))
+  ;; Toggle TeX input with "C-\"
+  (default-input-method "TeX")
+  ;; Set up bibliography locations
+  (org-cite-global-bibliography (list my/bibliography-file))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar))
 
 ;; Sets up org-mode files for capture/refile.
 (cond
@@ -105,22 +148,6 @@
 ;; TODO: Look into setting this up.
 (use-package org-transclusion
   :ensure t)
-
-;;; Org exporters
-(use-package org
-  :config
-  (require 'ox-latex)
-  (add-to-list 'org-latex-classes
-               '("wvwcslides"
-                 "\\documentclass{wvwcslides}
-               [NO-DEFAULT-PACKAGES]
-               [PACKAGES]
-               [EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 ;;; GTD
 ;; org-gtd implements an opinionated GTD workflow into Org mode.
@@ -172,17 +199,6 @@
    ;; Quick actions on tasks in agenda views (optional but recommended)
    :map org-agenda-mode-map
    ("C-c ." . org-gtd-agenda-transient)))
-
-;;; Org babel
-;; Org babel integrates coding into Org mode documents.
-(use-package org
-  :ensure nil
-  :config
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((octave . t)
-                               (gnuplot . t)
-                               (python . t)
-                               (latex . t))))
 
 ;;; Assessment
 ;; I use Org mode for grading homework assignments and tests.  These are helper

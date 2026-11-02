@@ -455,13 +455,12 @@
                           :foreground 'unspecified
                           :inherit nil)))
   ;; END_CLAUDE
+  (add-hook 'modus-themes-after-load-theme-hook #'my/ef-themes-paren-expression-face)
 
   ;; Finally, load your theme of choice (or a random one with
   ;; `modus-themes-load-random', `modus-themes-load-random-dark',
   ;; `modus-themes-load-random-light').
-  (modus-themes-load-theme 'ef-dream)
-  :hook
-  (modus-themes-after-load-theme . my/ef-themes-paren-expression-face))
+  (modus-themes-load-theme 'ef-dream))
 
 ;;; UI enhancements
 ;; Set the fringes to match the pixel height of a character.  This
@@ -850,29 +849,6 @@ folds, zero or a negative number opens all folds."
   (setq diff-hl-show-staged-changes nil)  ; Realtime feedback
   (setq diff-hl-update-async t)  ; Do not block Emacs
   (setq diff-hl-global-modes '(not pdf-view-mode image-mode)))
-
-;; Org mode is a major mode designed for organizing notes, planning, task
-;; management, and authoring documents using plain text with a simple and
-;; expressive markup syntax. It supports hierarchical outlines, TODO lists,
-;; scheduling, deadlines, time tracking, and exporting to multiple formats
-;; including HTML, LaTeX, PDF, and Markdown.
-(use-package org
-  ;; Don't let Elpaca manage org.  Use built-in for now.  TODO: Determine if Org
-  ;; should be updated with newer version with improved latex-preview.
-  :ensure nil
-  :commands (org-mode org-version)
-  :mode
-  ("\\.org\\'" . org-mode)
-  :init
-  (setq org-hide-leading-stars t)
-  (setq org-startup-indented t)
-  (setq org-adapt-indentation nil)
-  (setq org-edit-src-content-indentation 0)
-  ;; (setq org-fontify-done-headline t)
-  ;; (setq org-fontify-todo-headline t)
-  ;; (setq org-fontify-whole-heading-line t)
-  ;; (setq org-fontify-quote-and-verse-blocks t)
-  (setq org-startup-truncated t))
 
 ;; Set up the Language Server Protocol (LSP) servers using Eglot.
 (use-package eglot

@@ -131,6 +131,8 @@
 ;;; org-noter
 ;; This package allows you to create a notes file to "attach" to another
 ;; document, such as a PDF.
+(use-package djvu)
+
 (use-package org-noter
   :ensure t)
 
@@ -140,14 +142,6 @@
   :ensure nil
   :custom
   (bib-file my/bibliography-file))
-
-(use-package org
-  :ensure nil
-  :custom
-  (org-cite-global-bibliography (list my/bibliography-file))
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar))
 
 (use-package citar
   :ensure t

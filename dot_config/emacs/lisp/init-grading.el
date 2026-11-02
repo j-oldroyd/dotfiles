@@ -6,8 +6,6 @@
 ;; Claude-produced code at this point.
 
 ;;; Code:
-(use-package org
-  :ensure nil)
 (require 'cl-lib)
 (require 'subr-x)
 
