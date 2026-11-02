@@ -35,26 +35,42 @@
   :type 'file
   :group 'grading)
 
+(defun grading--call-in-org-file (file fn)
+  "Call FN with point in a buffer holding FILE's contents, in Org mode.
+If FILE is already being visited, use that buffer so unsaved edits are
+seen.  Otherwise read the file into a temporary buffer, which avoids the
+hooks, prompts and leftover buffers of `find-file-noselect'."
+  (let ((buf (find-buffer-visiting file)))
+    (if buf
+        (with-current-buffer buf
+          (save-excursion
+            (save-restriction
+              (widen)
+              (funcall fn))))
+      (with-temp-buffer
+        (insert-file-contents file)
+        (delay-mode-hooks (org-mode))
+        (funcall fn)))))
+
 (defun grading--rubric ()
   "Return an alist (QUESTION . CRITERIA) read from `grading-rubric-file'.
 Each criterion is a plist with keys :id, :title, :tags and :max."
   (let ((file (expand-file-name grading-rubric-file))
         result)
-    (with-current-buffer (find-file-noselect file)
-      (save-excursion
-        (save-restriction
-          (widen)
-          (org-map-entries
-           (lambda ()
-             (cond
-              ((= (org-current-level) 1)
-               (push (list (org-get-heading t t t t)) result))
-              ((and result (org-entry-get nil "RUBRIC_ID"))
-               (push (list :id (org-entry-get nil "RUBRIC_ID")
-                           :title (org-get-heading t t t t)
-                           :tags (org-get-tags nil t)
-                           :max (org-entry-get nil "MAX"))
-                     (cdar result)))))))))
+    (grading--call-in-org-file
+     file
+     (lambda ()
+       (org-map-entries
+        (lambda ()
+          (cond
+           ((= (org-current-level) 1)
+            (push (list (org-get-heading t t t t)) result))
+           ((and result (org-entry-get nil "RUBRIC_ID"))
+            (push (list :id (org-entry-get nil "RUBRIC_ID")
+                        :title (org-get-heading t t t t)
+                        :tags (org-get-tags nil t)
+                        :max (org-entry-get nil "MAX"))
+                  (cdar result))))))))
     (mapcar (lambda (q) (cons (car q) (reverse (cdr q))))
             (nreverse result))))
 
