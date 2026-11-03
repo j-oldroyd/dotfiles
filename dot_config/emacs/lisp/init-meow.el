@@ -5,6 +5,22 @@
 ;; My customizations for Meow.
 
 ;;; Code:
+;; BEGIN_CLAUDE
+(defvar-keymap my/window-map
+  :doc "Window commands under SPC w."
+  :parent window-prefix-map
+  "h" #'windmove-left
+  "j" #'windmove-down
+  "k" #'windmove-up
+  "l" #'windmove-right
+  "H" #'windmove-swap-states-left
+  "J" #'windmove-swap-states-down
+  "K" #'windmove-swap-states-up
+  "L" #'windmove-swap-states-right)
+;; END_CLAUDE
+
+(meow-leader-define-key (cons "w" my/window-map))
+
 (defvar my/meow-leader-map (make-sparse-keymap)
   "A keymap specifically for use with Meow's leader state.")
 
@@ -116,6 +132,8 @@
    '("z" . meow-pop-selection)
    '("/" . consult-line)
    '("'" . repeat)
+   '("|" . paredit-splice-sexp)
+   '("@" . paredit-raise-sexp)
    '(")" . meow-forward-slurp)
    '("(" . meow-backward-slurp)
    '("}" . meow-forward-barf)
