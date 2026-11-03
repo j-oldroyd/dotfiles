@@ -19,8 +19,6 @@
   "L" #'windmove-swap-states-right)
 ;; END_CLAUDE
 
-(meow-leader-define-key (cons "w" my/window-map))
-
 (defvar my/meow-leader-map (make-sparse-keymap)
   "A keymap specifically for use with Meow's leader state.")
 
@@ -50,7 +48,7 @@
    '("s" . isearch-forward)
    '("t" . ghostel-project)
    '("v" . magit-status) ; Mnemonic: (v)ersion control
-   (cons "w" window-prefix-map)
+   (cons "w" my/window-map)
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
