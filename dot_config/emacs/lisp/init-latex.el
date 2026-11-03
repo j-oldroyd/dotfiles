@@ -43,10 +43,22 @@
   (setq preview-gs-command "/opt/homebrew/bin/gs"))
 
 ;;; Buffer settings
-;; Remove error/help windows when no longer needed.
+;; Remove error/help windows when no longer needed.  Adapted from
+;; https://emacs.stackexchange.com/a/28695/45800.
+(defun my/TeX-error-delete-window ()
+  "Delete TeX error window when there are no errors to show."
+  (let ((w (get-buffer-window))
+        (b (get-buffer "*TeX Help*")))
+    (when w
+      (delete-window w))
+    (when b
+      (setq w (get-buffer-window b))
+      (when w
+        (delete-window w)))))
+
 (defun my/TeX-error-install-delete-window-hook ()
   "Install `TeX-error-delete-window' in buffer-local `kill-buffer-hook'."
-  (add-hook 'kill-buffer-hook #'TeX-error-delete-window nil t))
+  (add-hook 'kill-buffer-hook #'my/TeX-error-delete-window nil t))
 
 (add-hook 'TeX-error-overview-mode-hook
           #'my/TeX-error-install-delete-window-hook)
