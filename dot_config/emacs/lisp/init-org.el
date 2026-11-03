@@ -70,7 +70,6 @@
 
   :custom
   (org-src-fontify-natively t)
-  (org-preview-latex-default-process 'dvipng)
   (org-adapt-indentation t)
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n)"
@@ -99,7 +98,12 @@
   (org-cite-global-bibliography (list my/bibliography-file))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar))
+  (org-cite-activate-processor 'citar)
+  ;; LaTeX previews
+  ;; I use the new org-latex-preview feature to preview LaTeX in Org mode.  This
+  ;; requires a newer version of Org (≥10) than is currently built into Emacs, so
+  ;; Elpaca manages the installation of Org.
+  (org-latex-preview-process-default 'dvisvgm))
 
 ;; Sets up org-mode files for capture/refile.
 (cond
