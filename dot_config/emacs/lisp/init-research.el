@@ -33,39 +33,48 @@
   :custom
   (org-roam-directory (file-truename (expand-file-name "org/roam" my/cloud-storage)))
   ;; Dailies setup
-  (org-roam-dailies-directory "daily/")
-  (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %?"
-      :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
+  (org-roam-dailies-directory "daily/"))
+
+(setopt org-roam-dailies-capture-templates
+        '(("d" "default" entry
+           "* %?"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n"))
+          ("m" "meeting" entry
+           "* %^{Meeting Title} :%^{Type|research_meetings|PAC|assembly|advisee_meetings}:\n:PROPERTIES:\n:DATE: %U\n:ATTENDEES: %^{Attendees}\n:END:\n\n** Old business\n\n** Agenda\n- %?\n\n** Notes\n-\n\n** Action items [/]\n- [ ] \n"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")
+           :clock-in t
+           :clock-resume t)))
 
 ;; Notes template based on suggested citar config and Jethro Kuan's setup.
-(setq org-roam-capture-templates
-      '(("m" "main" plain
-         "%?"
-         :if-new (file+head "main/${slug}.org"
-                            "#+title: ${title}\n")
-         ;; :target
-         ;; (file+head
-         ;;  "%<%Y%m%d%H%M%S>-${slug}.org"
-         ;;  "#+title: ${note-title}\n")
-         :unnarrowed t)
-        ;; BEGIN_GEMINI
-        ("r" "reference note" plain
-         "%?"
-         :clock-in t
-         :clock-resume t
-         :target
-         (file+head
-          "%(expand-file-name (or citar-org-roam-subdir \"\")
+(setopt org-roam-capture-templates
+        '(("m" "main" plain
+           "%?"
+           :if-new (file+head "main/${slug}.org"
+                              "#+title: ${title}\n")
+           ;; :target
+           ;; (file+head
+           ;;  "%<%Y%m%d%H%M%S>-${slug}.org"
+           ;;  "#+title: ${note-title}\n")
+           :unnarrowed t)
+          ;; BEGIN_GEMINI
+          ("r" "reference note" plain
+           "%?"
+           :clock-in t
+           :clock-resume t
+           :target
+           (file+head
+            "%(expand-file-name (or citar-org-roam-subdir \"\")
                 org-roam-directory)/${citar-citekey}.org"
-          ":PROPERTIES:\n:ROAM_REFS:\n:END:\n#+title: ${citar-title}\n#+filetags: :${citar-type}:\n#+created: %U\n\n* Metadata\n- Last Modified: %U\n- Author: ${citar-author}\n- Year: ${citar-date}\n- Pages: ${citar-pages}\n- URL: ${citar-url}\n- Status: %^{Status|Reading|Completed|Abandoned|To Read}\n- Progress: %^{Progress|0|50|100}\n- Rating: %^{Rating|N/A|★☆☆☆☆|★★☆☆☆|★★★☆☆|★★★★☆|★★★★★}\n- Date Finished: %U\n\n\n* Summary\n\n* Key Definitions & Takeaways\n\n* Detailed Notes & Breakdown\n** %^{Division|Section|Chapter} 1\n\n* Atomic Concepts & Links\n\n* Quotes & Highlights\n#+begin_quote\n\n#+end_quote\n")
-         :unnarrowed t)
-        ;; END_GEMINI
-        ("a" "article" plain "%?"
-         :if-new
-         (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
-         :immediate-finish t
-         :unnarrowed t)))
+            ":PROPERTIES:\n:ROAM_REFS:\n:END:\n#+title: ${citar-title}\n#+filetags: :${citar-type}:\n#+created: %U\n\n* Metadata\n- Last Modified: %U\n- Author: ${citar-author}\n- Year: ${citar-date}\n- Pages: ${citar-pages}\n- URL: ${citar-url}\n- Status: %^{Status|Reading|Completed|Abandoned|To Read}\n- Progress: %^{Progress|0|50|100}\n- Rating: %^{Rating|N/A|★☆☆☆☆|★★☆☆☆|★★★☆☆|★★★★☆|★★★★★}\n- Date Finished: %U\n\n\n* Summary\n\n* Key Definitions & Takeaways\n\n* Detailed Notes & Breakdown\n** %^{Division|Section|Chapter} 1\n\n* Atomic Concepts & Links\n\n* Quotes & Highlights\n#+begin_quote\n\n#+end_quote\n")
+           :unnarrowed t)
+          ;; END_GEMINI
+          ("a" "article" plain "%?"
+           :if-new
+           (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
+           :immediate-finish t
+           :unnarrowed t)))
 
 ;; Helper functions for updating reference nodes
 ;; BEGIN_GEMINI
