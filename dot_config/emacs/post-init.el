@@ -1418,8 +1418,8 @@ folds, zero or a negative number opens all folds."
 ;; Org mode
 (require 'init-org)
 
-;; Research
-(require 'init-research)
+;; Note-taking
+(require 'init-notes)
 
 ;; Email
 ;; Variables to configure:

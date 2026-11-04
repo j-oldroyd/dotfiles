@@ -1,4 +1,4 @@
-;;; init-research.el --- Configuration for research workflow -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; init-notes.el --- Configuration for note-taking workflow -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -263,5 +263,5 @@ Returns selected items joined by SEPARATOR (defaults to a single space)."
 ;;
 ;;                             (mir-topic-minor-mode 1))))
 
-(provide 'init-research)
-;;; init-research.el ends here
+(provide 'init-notes)
+;;; init-notes.el ends here
