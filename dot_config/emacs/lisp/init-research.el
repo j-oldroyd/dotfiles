@@ -41,7 +41,19 @@
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n"))
           ("m" "meeting" entry
-           "* %^{Meeting Title} :%^{Type|research_meetings|PAC|assembly|advisee_meetings}:\n:PROPERTIES:\n:DATE: %U\n:ATTENDEES: %^{Attendees}\n:END:\n\n** Old business\n\n** Agenda\n- %?\n\n** Notes\n-\n\n** Action items [/]\n- [ ] \n"
+           "* %^{Meeting Title} :meeting:%^{Type|research|committee|assembly|advisee}:\n:PROPERTIES:\n:DATE: %U\n:ATTENDEES: %^{Attendees}\n:END:\n\n** Old business\n\n** Agenda\n- %?\n\n** Notes\n-\n\n** Action items [/]\n- [ ] \n"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")
+           :clock-in t
+           :clock-resume t)
+          ("r" "research meeting" entry
+           "* <%H:%M> Research: %^{Topic} :meeting:research:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Discussion\n%?\n** Progress\n\n** Letter-worthy :letter:\n\n** Next steps [/]\n- [ ] \n"
+           :target (file+head "%<%Y-%m-%d>.org"
+                              "#+title: %<%Y-%m-%d>\n")
+           :clock-in t
+           :clock-resume t)
+          ("a" "advising meeting" entry
+           "* %<%H:%M> Advising :meeting:advising:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Topics\n%?\n** Plans and goals\n\n** Letter-worthy :letter:\n\n** Concerns and follow-ups [/]\n- [ ] \n"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n")
            :clock-in t
@@ -69,6 +81,9 @@
                 org-roam-directory)/${citar-citekey}.org"
             ":PROPERTIES:\n:ROAM_REFS:\n:END:\n#+title: ${citar-title}\n#+filetags: :${citar-type}:\n#+created: %U\n\n* Metadata\n- Last Modified: %U\n- Author: ${citar-author}\n- Year: ${citar-date}\n- Pages: ${citar-pages}\n- URL: ${citar-url}\n- Status: %^{Status|Reading|Completed|Abandoned|To Read}\n- Progress: %^{Progress|0|50|100}\n- Rating: %^{Rating|N/A|★☆☆☆☆|★★☆☆☆|★★★☆☆|★★★★☆|★★★★★}\n- Date Finished: %U\n\n\n* Summary\n\n* Key Definitions & Takeaways\n\n* Detailed Notes & Breakdown\n** %^{Division|Section|Chapter} 1\n\n* Atomic Concepts & Links\n\n* Quotes & Highlights\n#+begin_quote\n\n#+end_quote\n")
            :unnarrowed t)
+          ("p" "person" plain "%?"
+           :if-new (file+head "people/${slug}.org"
+                              "#+TITLE: ${title}\n#+FILETAGS: :person:%^{Relationship|student|advisee|colleague}:%(my/org-capture-multi-select \"Major(s) (comma-separated): \" '(\"bs_math\" \"bs_phys\" \"bs_csci\" \"bs_chem\")):\n\n* Basics\n:PROPERTIES:\n:GRADUATION: %^{Graduation date}u\n:END:\n\n* Goal(s)\n\n"))
           ;; END_GEMINI
           ("a" "article" plain "%?"
            :if-new
@@ -77,7 +92,27 @@
            :unnarrowed t)))
 
 ;; Helper functions for updating reference nodes
+;; BEGIN_CLAUDE
+(defun my/meeting-person-link ()
+  "Prompt for a person node and return and Org link to it."
+  (let ((node (org-roam-node-read
+               nil (lambda (n) (member "person" (org-roam-node-tags n)))
+               nil nil "With: ")))
+    (if (org-roam-node-id node)
+        (org-link-make-string (concat "id:" (org-roam-node-id node))
+                              (org-roam-node-title node))
+      (org-roam-node-title node))))
+;; END_CLAUDE
+
 ;; BEGIN_GEMINI
+(defun my/org-capture-multi-select (prompt choices &optional separator)
+  "Prompt for multiple selections from CHOICES separated by commas.
+Returns selected items joined by SEPARATOR (defaults to a single space)."
+  (let ((sep (or separator ":")))
+    (mapconcat #'identity
+               (completing-read-multiple prompt choices)
+               sep)))
+
 (defun my/org-roam-update-bullet (field value)
   "Search for '- FIELD: ...' bullet point in the current buffer and replace its VALUE."
   (save-excursion

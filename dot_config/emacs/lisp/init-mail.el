@@ -172,8 +172,6 @@
   (org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t tex:dvisvgm")
   (org-msg-startup "hidestars indent inlineimages")
   (org-msg-greeting-fmt "\nHi%s,\n\n")
-  ;; The code below demonstrates how to set recipient names, but for privacy
-  ;; reasons I define these elsewhere.
   (org-msg-recipient-names my/mail-names)
   (org-msg-greeting-name-limit 3)
   (org-msg-default-alternatives '((new          . (text html))
