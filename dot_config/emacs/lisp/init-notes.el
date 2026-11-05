@@ -47,7 +47,7 @@
            :clock-in t
            :clock-resume t)
           ("r" "research meeting" entry
-           "* <%H:%M> Research: %^{Topic} :meeting:research:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Discussion\n%?\n** Progress\n\n** Letter-worthy :letter:\n\n** Next steps [/]\n- [ ] \n"
+           "* %<%H:%M> Research: %^{Topic} :meeting:research:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Discussion\n%?\n** Progress\n\n** Letter-worthy :letter:\n\n** Next steps [/]\n- [ ] \n"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n")
            :clock-in t
@@ -83,7 +83,8 @@
            :unnarrowed t)
           ("p" "person" plain "%?"
            :if-new (file+head "people/${slug}.org"
-                              "#+TITLE: ${title}\n#+FILETAGS: :person:%^{Relationship|student|advisee|colleague}:%(my/org-capture-multi-select \"Major(s) (comma-separated): \" '(\"bs_math\" \"bs_phys\" \"bs_csci\" \"bs_chem\")):\n\n* Basics\n:PROPERTIES:\n:GRADUATION: %^{Graduation date}u\n:END:\n\n* Goal(s)\n\n"))
+                              "#+TITLE: ${title}\n#+FILETAGS: :person:%^{Relationship|student|advisee|colleague}:%(my/org-capture-multi-select \"Major(s) (comma-separated): \" '(\"bs_math\" \"bs_phys\" \"bs_csci\" \"bs_chem\")):\n\n* Basics\n:PROPERTIES:\n:GRADUATION: %^{Graduation date}u\n:END:\n\n* Goal(s)\n\n")
+           :unnarrowed t)
           ;; END_GEMINI
           ("a" "article" plain "%?"
            :if-new
