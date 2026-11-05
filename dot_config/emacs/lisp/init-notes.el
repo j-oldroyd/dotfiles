@@ -264,5 +264,8 @@ Returns selected items joined by SEPARATOR (defaults to a single space)."
 ;;
 ;;                             (mir-topic-minor-mode 1))))
 
+;; TODO: Consider adding `consult-org-roam' for enhanced search of roam nodes
+;; and `zetteldesktop' for "session" functionality with roam nodes (i.e., only
+;; search through the nodes I say I care about).
 (provide 'init-notes)
 ;;; init-notes.el ends here
