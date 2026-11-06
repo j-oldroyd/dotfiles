@@ -65,8 +65,9 @@
                                (latex . t)))
 
   :hook ((org-mode . visual-line-mode)  ; wrap lines at word breaks
-         (org-mode . jinx-mode)    ; spell checking!
-         (org-mode . toggle-input-method))
+         (org-mode . jinx-mode)         ; spell checking!
+         (org-mode . toggle-input-method)
+         (org-mode . org-latex-preview-mode))
 
   :custom
   (org-src-fontify-natively t)
@@ -98,12 +99,7 @@
   (org-cite-global-bibliography (list my/bibliography-file))
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  ;; LaTeX previews
-  ;; I use the new org-latex-preview feature to preview LaTeX in Org mode.  This
-  ;; requires a newer version of Org (≥10) than is currently built into Emacs, so
-  ;; Elpaca manages the installation of Org.
-  (org-latex-preview-process-default 'dvisvgm))
+  (org-cite-activate-processor 'citar))
 
 ;; Sets up org-mode files for capture/refile.
 (cond
@@ -144,8 +140,25 @@
   ((org-mode . org-modern-mode)
    (org-agenda-finalize . org-modern-agenda)))
 
+;;; Previews
+;; LaTeX previews
+;; I use the new org-latex-preview feature to preview LaTeX in Org mode.  This
+;; requires a newer version of Org (≥10) than is currently built into Emacs, so
+;; Elpaca manages the installation of Org.
+(use-package org-latex-preview
+  :elpaca nil
+  :ensure nil
+  :after org
 
-;; Org-transclusion
+  :custom
+  (org-latex-preview-process-default 'dvisvgm)
+  (org-latex-preview-mode-ignored-commands '(next-line previous-line))
+  (org-latex-preview-numbered t)
+  (org-latex-preview-mode-display-live t)
+  (org-latex-preview-mode-update-delay 0.25)
+  (org-latex-preview-process-precompile t))
+
+;;; Org-transclusion
 ;; Org-transclusion lets you insert text from another file.  For example, I can
 ;; define course outcomes in a file outcomes.org and then insert them
 ;; programmatically into a rubric.

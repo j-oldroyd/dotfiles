@@ -31,7 +31,7 @@
   (require 'org-roam-protocol)
 
   :custom
-  (org-roam-directory (file-truename (expand-file-name "org/roam" my/cloud-storage)))
+  (org-roam-directory (expand-file-name "org/roam" my/cloud-storage))
   ;; Dailies setup
   (org-roam-dailies-directory "daily/"))
 
