@@ -27,10 +27,6 @@
   (setq org-startup-indented t)
   (setq org-adapt-indentation nil)
   (setq org-edit-src-content-indentation 0)
-  ;; (setq org-fontify-done-headline t)
-  ;; (setq org-fontify-todo-headline t)
-  ;; (setq org-fontify-whole-heading-line t)
-  ;; (setq org-fontify-quote-and-verse-blocks t)
   (setq org-startup-truncated t)
   :config
   ;; Citation support
@@ -78,8 +74,8 @@
   (org-todo-keyword-faces
    '(("TODO" . org-todo)
      ("NEXT" . (:foreground "#D35400" :weight bold))
-     ("CANCELED" . (:foreground "#7F8CFD" :strike-through t :weight bold))
-     ("WAITING" . (:foreground "#8E44AD" :weight bold))))
+     ("CNCL" . (:foreground "#7F8CFD" :strike-through t :weight bold))
+     ("WAIT" . (:foreground "#8E44AD" :weight bold))))
   (org-capture-templates
    '(("t" "Todo" entry (file org-default-notes-file)
       "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
@@ -100,6 +96,29 @@
   (org-cite-insert-processor 'citar)
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar))
+
+;; BEGIN_CLAUDE
+(defun my/org-in-math-p ()
+  "Return non-nil if point is strictly inside an Org LaTeX fragment/environment."
+  (when (derived-mode-p 'org-mode)
+    (let ((ctx (org-element-context)))
+      (when (memq (org-element-type ctx) '(latex-fragment latex-environment))
+        (let ((beg (org-element-property :begin ctx))
+              ;; :end includes trailing whitespace, so trim it back.
+              (end (save-excursion
+                     (goto-char (org-element-property :end ctx))
+                     (skip-chars-backward " \t\n")
+                     (point))))
+          (and (> (point) beg) (< (point) end)))))))
+
+(defun my/quail-skip-in-org-math (orig-fn key)
+  "Around advice for `quail-input-method': bypass Quail in Org math."
+  (if (my/org-in-math-p)
+      (list key)                        ; insert the key unchanged
+    (funcall orig-fn key)))
+;; END_CLAUDE
+
+(advice-add 'quail-input-method :around #'my/quail-skip-in-org-math)
 
 ;; Sets up org-mode files for capture/refile.
 (cond
@@ -146,7 +165,6 @@
 ;; requires a newer version of Org (≥10) than is currently built into Emacs, so
 ;; Elpaca manages the installation of Org.
 (use-package org-latex-preview
-  :elpaca nil
   :ensure nil
   :after org
 

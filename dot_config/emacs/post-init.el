@@ -1410,6 +1410,8 @@ folds, zero or a negative number opens all folds."
 (require 'init-meow)
 
 ;; Terminal emulation in Emacs based on ghostel
+;; TODO: Look into adding `chezmoi.el'.
+;; TODO: Look into setting up `authinfo'.
 (require 'init-term)
 
 ;; Window management
@@ -1436,6 +1438,7 @@ folds, zero or a negative number opens all folds."
 (require 'init-latex)
 
 ;; Lean4
+;; TODO: Look into using Nael instead
 (require 'init-lean)
 
 ;; Grading

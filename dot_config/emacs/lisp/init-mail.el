@@ -21,7 +21,6 @@
   ;; mu4e likes to open in full frame, so... don't do that. Taken from
   ;;
   ;; https://irreal.org/blog/?p=11323
-  ;; FIXME: This causes an error on startup since mu4e isn't loaded yet
   (add-to-list 'display-buffer-alist
                `(,(regexp-quote mu4e-main-buffer-name)
                  display-buffer-same-window))
