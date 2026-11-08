@@ -211,6 +211,9 @@
                              (canceled . "CNCL")
                              (done . "DONE")))
 
+  (org-gtd-areas-of-focus '("Home" "Health" "Family" "Teaching" "Research"
+                            "Advising" "Service"))
+
   :config
   ;; REQUIRED: Enable org-edna for project dependencies
   (org-edna-mode 1)
@@ -242,16 +245,21 @@
   :after org
   :config (org-super-agenda-mode 1))
 
-(setq org-agenda-custom-commands
-      '(("d" "Daily dashboard"
-         ((agenda "" ((org-agenda-span 1)
-                      (org-super-agenda-groups
-                       '((:name "Meetings" :tag "meeting")
-                         (:name "Scheduled" :time-grid t)
-                         (:name "Due soon" :deadline future)))))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")
+(setopt org-agenda-custom-commands
+        '(("d" "Daily dashboard"
+           ((agenda "" ((org-agenda-span 1)
                         (org-super-agenda-groups
-                         '((:auto-category t)))))))))
+                         '((:name "Overdue" :deadline past)
+                           (:name "Meetings" :tag "meeting")
+                           (:name "Scheduled" :time-grid t)
+                           (:name "Due soon" :deadline future)))))
+            (todo "NEXT" ((org-agenda-overriding-header "Next actions")
+                          (org-super-agenda-groups
+                           '((:name "Teaching" :tag "teaching")
+                             (:name "Research" :tag "research")
+                             (:name "Service" :tag "service")
+                             (:name "Advising" :tag "advising")
+                             (:auto-category t)))))))))
 ;; END_CLAUDE
 
 ;;; Assessment
