@@ -223,6 +223,7 @@
   (("C-c d c" . org-gtd-capture)
    ("C-c d e" . org-gtd-engage)
    ("C-c d p" . org-gtd-process-inbox)
+   ("C-c d m" . org-gtd-reflect-someday-review)
    ("C-c d n" . org-gtd-show-all-next)
    ("C-c d r" . org-gtd-command-center)
    ("C-c d s" . org-gtd-reflect-stuck-projects)
@@ -234,6 +235,24 @@
    ;; Quick actions on tasks in agenda views (optional but recommended)
    :map org-agenda-mode-map
    ("C-c ." . org-gtd-agenda-transient)))
+
+;;; Agenda views
+;; BEGIN_CLAUDE
+(use-package org-super-agenda
+  :after org
+  :config (org-super-agenda-mode 1))
+
+(setq org-agenda-custom-commands
+      '(("d" "Daily dashboard"
+         ((agenda "" ((org-agenda-span 1)
+                      (org-super-agenda-groups
+                       '((:name "Meetings" :tag "meeting")
+                         (:name "Scheduled" :time-grid t)
+                         (:name "Due soon" :deadline future)))))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")
+                        (org-super-agenda-groups
+                         '((:auto-category t)))))))))
+;; END_CLAUDE
 
 ;;; Assessment
 ;; I use Org mode for grading homework assignments and tests.  These are helper
