@@ -86,6 +86,12 @@
                               "#+TITLE: ${title}\n#+FILETAGS: :person:%^{Relationship|student|advisee|colleague}:%(my/org-capture-multi-select \"Major(s) (comma-separated): \" '(\"bs_math\" \"bs_phys\" \"bs_csci\" \"bs_chem\")):\n\n* Basics\n:PROPERTIES:\n:GRADUATION: %^{Graduation date}u\n:END:\n\n* Goal(s)\n\n")
            :unnarrowed t)
           ;; END_GEMINI
+          ;; BEGIN_CLAUDE
+          ("j" "project hub" plain "%?"
+           :target (file+head "projects/${slug}.org"
+                              "#+title: ${title}\n#+filetags: :project:%^{Area|teaching|research|advising|service}:\n\n* Goal\n\n* GTD project\n\n* Notes\n")
+           :unnarrowed t)
+          ;; END_CLAUDE
           ("a" "article" plain "%?"
            :if-new
            (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
