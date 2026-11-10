@@ -88,7 +88,20 @@
      ("f" "Fleeting note" entry  (file org-default-notes-file)
       "* TODO %^{Note title}\nContext: %a\n%?" :empty-lines-before 1 )
      ("n" "Next Task" entry (file+headline org-default-notes-file "Tasks")
-      "** NEXT %? \nDEADLINE: %t")))
+      "** NEXT %? \nDEADLINE: %t")
+     ("l" "Lecture")
+     ("la" "Announcement" entry
+      (file+headline my/course-file "Announcements")
+      "* %U %^{Announcement} :announce:\nVia: %^{Via|class|LMS}\n%?")
+     ("ld" "Deadline" entry
+      (file+headline my/course-file "Deadlines")
+      "* TODO %^{Todo} :deadline:\nDEADLINE: %^{Due}t\n%?")
+     ("ll" "Class log" entry
+      (file+olp+datetree my/course-file "Class log")
+      "* %^{Topic}\n:PROPERTIES:\n:LECTURE_NOTES: %a\n:END:\n** Covered\n%?\n")
+     ("lf" "Follow-ups" entry
+      (file+olp+datetree my/course-file "Follow-ups")
+      "** Questions/misconceptions\n** Revisions :revise:\n")))
   ;; Toggle TeX input with "C-\"
   (default-input-method "TeX")
   ;; Set up bibliography locations
@@ -262,7 +275,63 @@
                              (:auto-category t)))))))))
 ;; END_CLAUDE
 
-;;; Assessment
+;;; Course management and assessment
+;; Courses are tracked using one `.org' file per semester.
+;; BEGIN_CLAUDE
+(defvar my/courses-directory (expand-file-name "org/roam/courses" my/cloud-storage)
+  "Location of course files.")
+(add-to-list 'org-agenda-files my/courses-directory)
+
+(defun my/new-course (code title semester)
+  "Create a course file for CODE, TITLE, SEMESTER and open it."
+  (interactive
+   "sCourse code (e.g., MATH 161): \nsTitle: \nsSemester: ")
+  (make-directory my/courses-directory t)
+  (let ((file (expand-file-name
+               (concat (mapconcat
+                        (lambda (s)
+                          (downcase (replace-regexp-in-string
+                                     "[^[:alnum:]]+" "" s)))
+                        (list code semester) "-")
+                       ".org")
+               my/courses-directory)))
+    (when (file-exists-p file)
+      (user-error "%s already exists" file))
+    (find-file file)
+    (insert (format "#+title: %s: %s, %s\n#+filetags: :course:\n\n* Announcements\n* Deadlines\n* Class log\n* Follow-ups\n"
+                    code title semester))
+    (goto-char (point-min))
+    ;; Make it a Roam node if it lives under `org-roam-directory'.
+    (when (and (bound-and-true-p org-roam-directory)
+               (string-prefix-p (expand-file-name org-roam-directory)
+                                (expand-file-name my/courses-directory)))
+      (org-id-get-create))
+    (save-buffer)))
+
+(defvar my/course-last nil)
+(defvar my/course--current nil)
+(defun my/course-file ()
+  "Prompt for a course file, once per capture."
+  ;; Check if `my/course--current' is already defined.  If not, define it.
+  (or my/course--current
+      (let ((choice (completing-read
+                     "Course: "
+                     (mapcar #'file-name-base
+                             (directory-files my/courses-directory nil "\\.org\\'"))
+                     nil t nil nil my/course-last)))
+        (setq my/course-last choice
+              my/course--current (expand-file-name (concat choice ".org")
+                                                   my/courses-directory)))))
+
+(add-hook 'org-capture-after-finalize-hook
+          (lambda () (setq my/course--current nil)))
+
+(add-to-list 'org-agenda-custom-commands
+             '("C" "Course deadlines (14 days)" agenda ""
+               ((org-agenda-span 14)
+                (org-agenda-entry-types '(:deadline))
+                (org-agenda-files
+                 (directory-files my/courses-directory t "\\.org\\'")))))
 ;; I use Org mode for grading homework assignments and tests.  These are helper
 ;; functions that I've created (through AI) to help me do so.  My goal is to
 ;; mimic the Gradescope workflow in Org mode.
