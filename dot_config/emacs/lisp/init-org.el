@@ -110,6 +110,22 @@
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar))
 
+(use-package ob-sagemath
+  :ensure t)
+
+;; Ob-sagemath supports only evaluating with a session.
+(setq org-babel-default-header-args:sage '((:session . t)
+                                           (:results . "output")))
+
+;; Do not confirm before evaluation
+(setq org-confirm-babel-evaluate nil)
+
+;; Show images when opening a file.
+(setq org-startup-with-inline-images t)
+
+;; Show images after evaluating code blocks.
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
 ;; BEGIN_CLAUDE
 (defun my/org-in-math-p ()
   "Return non-nil if point is strictly inside an Org LaTeX fragment/environment."

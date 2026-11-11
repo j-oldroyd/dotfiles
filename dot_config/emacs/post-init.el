@@ -158,8 +158,10 @@
   :ensure nil
   :hook (corfu-mode . corfu-popupinfo-mode)
   :custom
-  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-auto-delay 1.0)
+  (corfu-popupinfo-delay '(1 . 0.1))
   (corfu-popupinfo-hide nil)
+  (corfu-quit-no-match t)
   :config
   (corfu-popupinfo-mode))
 

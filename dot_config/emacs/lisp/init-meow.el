@@ -93,7 +93,7 @@
    '("e" . meow-next-word)
    '("E" . meow-next-symbol)
    '("f" . flash-jump)
-   '("F" . avy-goto-char-timer)
+   '("F" . avy-goto-symbol-1)
    '("g" . meow-cancel-selection)
    '("G" . meow-grab)
    '("h" . meow-left)
