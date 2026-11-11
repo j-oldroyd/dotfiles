@@ -92,7 +92,7 @@
      ("l" "Lecture")
      ("la" "Announcement" entry
       (file+headline my/course-file "Announcements")
-      "* %U %^{Announcement} :announce:\nVia: %^{Via|class|LMS}\n%?")
+      "* %^{Date}t %^{Announcement} :announce:\nVia: %^{Via|class|LMS}\n%?")
      ("ld" "Deadline" entry
       (file+headline my/course-file "Deadlines")
       "* TODO %^{Todo} :deadline:\nDEADLINE: %^{Due}t\n%?")
