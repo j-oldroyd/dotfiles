@@ -144,6 +144,22 @@
 (use-package latexdiff)
 
 ;;; Sage
+;;  emacs-sage-shell
+(use-package sage-shell-mode
+  :ensure t)
+
+;; AucTeX keybindings for SageTeX with emacs-sage-shell
+;; From Github documentation
+(eval-after-load "latex"
+  '(mapc (lambda (key-cmd) (define-key LaTeX-mode-map (car key-cmd) (cdr key-cmd)))
+         `((,(kbd "C-c s c") . sage-shell-sagetex:compile-current-file)
+           (,(kbd "C-c s C") . sage-shell-sagetex:compile-file)
+           (,(kbd "C-c s r") . sage-shell-sagetex:run-latex-and-load-current-file)
+           (,(kbd "C-c s R") . sage-shell-sagetex:run-latex-and-load-file)
+           (,(kbd "C-c s l") . sage-shell-sagetex:load-current-file)
+           (,(kbd "C-c s L") . sage-shell-sagetex:load-file)
+           (,(kbd "C-c C-z") . sage-shell-edit:pop-to-process-buffer))))
+
 ;; We need to modify sage-shell to accept filepaths with spaces in their
 ;; names.  This appears to require modifying
 ;; `sage-shell-sagetex:tex-master-maybe'.  (`advice-add' accepts functions that
