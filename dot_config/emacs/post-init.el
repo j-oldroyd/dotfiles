@@ -805,7 +805,7 @@ folds, zero or a negative number opens all folds."
 
   (yas-global-mode 1))
 
-(defun get-exercise-labels ()
+(defun my/get-exercise-labels ()
   "Helper function for ;xxref snippet.
  This function finds labels for exercises created using XSIM."
   (interactive)
