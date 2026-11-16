@@ -21,6 +21,7 @@
   (TeX-auto-save t)
   (TeX-parse-self t)
   (TeX-master nil)
+  (TeX-style-private (expand-file-name "auctex-styles" minimal-emacs-user-directory))
   (adaptive-wrap-extra-indent 2)
   ;; PDF and SyncTeX settings
   (TeX-view-program-selection '((output-pdf "PDF Tools")))
@@ -35,6 +36,52 @@
 
   (add-hook 'TeX-after-compilation-finished-functions
             #'TeX-revert-document-buffer))
+
+;;; RefTeX settings
+;; BEGIN_CLAUDE
+(use-package reftex
+  :ensure nil
+  :custom
+  (reftex-ref-style-default-list '("Default" "Zref-clever"))
+  :config
+  (add-to-list 'reftex-ref-style-alist
+               '("Zref-clever" "zref-clever"
+                 (("\\zcref" ?z) ("\\zcpageref" ?Z)))))
+;; END_CLAUDE
+
+;; BEGIN_GEMINI
+;; (with-eval-after-load 'latex
+;;   (TeX-add-style-hook
+;;    "zref-clever"
+;;    (lambda ()
+;;      ;; Register macros for C-c C-m completion and label prompting
+;;      (TeX-add-symbols
+;;       '("zcref" [ "Options" ] TeX-arg-ref)
+;;       '("zcref*" [ "Options" ] TeX-arg-ref)
+;;       '("zcpageref" [ "Options" ] TeX-arg-ref)
+;;       '("zcpageref*" [ "Options" ] TeX-arg-ref)
+;;       '("zcsetup" t)
+;;       '("zcRefTypeSetup" t t))
+;;
+;;      ;; Enable font-locking (syntax highlighting) for the new macros
+;;      (when (and (featurep 'font-latex)
+;;                 (eq TeX-install-font-lock 'font-latex-setup))
+;;        (font-latex-add-keywords '(("zcref" "*[{")
+;;                                   ("zcpageref" "*[{"))
+;;                                 'reference)
+;;        (font-latex-add-keywords '(("zcsetup" "{")
+;;                                   ("zcRefTypeSetup" "{{"))
+;;                                 'function)))
+;;    TeX-dialect))
+
+;; I want to use zref-clever with RefTeX, so adjust `reftex-ref-style-alist'.
+;; (with-eval-after-load 'reftex
+;;   (add-to-list 'reftex-ref-style-alist
+;;                '("Zref-clever" "zref-clever"
+;;                  (("\\zcref" ?z))))
+;;
+;;   ;; Activate the style by default alongside standard LaTeX refs
+;;   (add-to-list 'reftex-ref-style-default-list "zref-clever"))
 
 ;; AUCTeX's live preview requires ghostscript, so we tell AUCTeX where to
 ;; find it on macOS.  Live preview on Windows is very troublesome, so we
