@@ -54,9 +54,14 @@
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
 
-;; Cloud storage
+;; Cloud storage and Syncthing
 (defcustom my/cloud-storage "~/Google Drive"
   "Cloud storage directory."
+  :type 'directory
+  :group 'my-config)
+
+(defcustom my/sync-directory "~/Sync"
+  "Syncthing storage directory."
   :type 'directory
   :group 'my-config)
 

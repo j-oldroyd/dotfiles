@@ -77,10 +77,11 @@
      ("CNCL" . (:foreground "#7F8CFD" :strike-through t :weight bold))
      ("WAIT" . (:foreground "#8E44AD" :weight bold))))
   (org-capture-templates
-   '(("t" "Todo" entry (file org-default-notes-file)
+   `(("t" "Todo" entry (file org-default-notes-file)
       "* TODO %?\n%u\n%a\n" :clock-in t :clock-resume t)
-     ("m" "Meeting" entry (file org-default-notes-file)
-      "* MEETING with %? :MEETING:\n%t" :clock-in t :clock-resume t)
+     ("m" "Meeting" entry
+      (file+olp+datetree ,(expand-file-name "calendar-beorg.org" my/sync-directory))
+      "* %^{Event Name} %^{Date}t :meeting:\n:PROPERTIES:\n:WITH: %(my/meeting-person-link)\n:END:\n%?")
      ("d" "Diary" entry (file+datetree "~/org/diary.org")
       "* %?\n%U\n" :clock-in t :clock-resume t)
      ("i" "Idea" entry (file org-default-notes-file)
@@ -279,7 +280,7 @@
            ((agenda "" ((org-agenda-span 1)
                         (org-super-agenda-groups
                          '((:name "Overdue" :deadline past)
-                           (:name "Meetings" :tag "meeting")
+                           ;; (:name "Meetings" :tag "meeting" :time-grid t)
                            (:name "Scheduled" :time-grid t)
                            (:name "Due soon" :deadline future)))))
             (todo "NEXT" ((org-agenda-overriding-header "Next actions")
