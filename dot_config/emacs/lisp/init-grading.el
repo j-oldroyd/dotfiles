@@ -52,6 +52,9 @@ hooks, prompts and leftover buffers of `find-file-noselect'."
         (delay-mode-hooks (org-mode))
         (funcall fn)))))
 
+;; TODO: Look into making this select rubric interactively.  This would allow me
+;; to keep a single `gradebook.org' file with assignments separated by headings
+;; and student information filled in by selecting appropriate rubrics.
 (defun grading--rubric ()
   "Return an alist (QUESTION . CRITERIA) read from `grading-rubric-file'.
 Each criterion is a plist with keys :id, :title, :tags and :max."
