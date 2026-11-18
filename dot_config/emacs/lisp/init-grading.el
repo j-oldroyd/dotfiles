@@ -518,5 +518,39 @@ Headings at `grading-student-level' with no rubric criteria beneath them
                  (format " (%d with ungraded criteria)" incomplete)
                ""))))
 
+(defun grading-set-score (score)
+  "Set :SCORE: property for rubric item."
+  (interactive "sScore: ")
+  (org-set-property "SCORE" score))
+
+(defvar-keymap org-grader-mode-prefix-map
+  :doc "Prefix keymap for `org-grader-mode'."
+  "a" #'grading-add-student
+  "e" #'grading-export-student
+  "n" #'org-next-visible-heading
+  "s" #'grading-set-score)
+
+(defvar-keymap org-grader-mode-map
+  :doc "Keymap for `org-grader-mode'."
+  "C-c r" org-grader-mode-prefix-map)
+
+(define-minor-mode org-grader-mode
+  "Toggle My Custom mode.
+Interactively with no argument, this command toggles the mode.
+A positive prefix argument enables the mode, any other prefix
+argument disables it."
+  ;; Initial value (nil = disabled by default)
+  :init-value nil
+  ;; Mode-line indicator (leading space is standard)
+  :lighter " Grader"
+  ;; Keymap active when the mode is enabled
+  :keymap org-grader-mode-map
+  ;; Scope (nil = buffer-local, t = global across all buffers)
+  :global nil
+
+  ;; Body: executed whenever the mode is toggled on or off
+  )
+
+
 (provide 'init-grading)
 ;;; init-grading.el ends here
