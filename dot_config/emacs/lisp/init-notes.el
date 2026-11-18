@@ -47,13 +47,13 @@
            :clock-in t
            :clock-resume t)
           ("r" "research meeting" entry
-           "* %<%H:%M> Research: %^{Topic} :meeting:research:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Discussion\n%?\n** Progress\n\n** Letter-worthy :letter:\n\n** Next steps [/]\n- [ ] \n"
+           "* Research: %^{Topic} :meeting:research:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Discussion\n%?\n** Progress\n\n** Letter-worthy :letter:\n\n** Next steps [/]\n- [ ] \n"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n")
            :clock-in t
            :clock-resume t)
           ("a" "advising meeting" entry
-           "* %<%H:%M> Advising :meeting:advising:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Topics\n%?\n** Plans and goals\n\n** Letter-worthy :letter:\n\n** Concerns and follow-ups [/]\n- [ ] \n"
+           "* Advising :meeting:advising:\n:PROPERTIES:\n:DATE: %U\n:WITH: %(my/meeting-person-link)\n:END:\n\n** Topics\n%?\n** Plans and goals\n\n** Letter-worthy :letter:\n\n** Concerns and follow-ups [/]\n- [ ] \n"
            :target (file+head "%<%Y-%m-%d>.org"
                               "#+title: %<%Y-%m-%d>\n")
            :clock-in t
