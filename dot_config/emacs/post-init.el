@@ -375,8 +375,12 @@
 ;;; Undo enhancements
 ;; The undo-fu package is a lightweight wrapper around Emacs' built-in undo
 ;; system, providing more convenient undo/redo functionality.
+;;
+;; NOTE: Both of these packages are pulled from the emacsmirror repo on GitHub.
+;; Otherwise, Elpaca defaults to pulling them from Codeberg.  This apparently
+;; runs into rate limit problems.
 (use-package undo-fu
-  :ensure t
+  :ensure (:host github :repo "emacsmirror/undo-fu")
   :commands (undo-fu-only-undo
              undo-fu-only-redo
              undo-fu-only-redo-all
@@ -389,7 +393,7 @@
 ;; The undo-fu-session package complements undo-fu by enabling the saving
 ;; and restoration of undo history across Emacs sessions, even after restarting.
 (use-package undo-fu-session
-  :ensure t
+  :ensure (:host github :repo "emacsmirror/undo-fu-session")
   :init
   (undo-fu-session-global-mode 1))
 
