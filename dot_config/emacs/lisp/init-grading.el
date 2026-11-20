@@ -523,13 +523,24 @@ Headings at `grading-student-level' with no rubric criteria beneath them
 
 (defun grading-set-score (score)
   "Set :SCORE: property for rubric item."
-  (interactive "sScore: ")
+  (interactive (list (completing-read "Score: "
+                                      `("0" ,(org-entry-get nil "MAX"))
+                                      nil nil)))
   (org-set-property "SCORE" score))
+
+(defun grading-leave-comments ()
+  "Move into body of the rubric item to leave comments."
+  (interactive)
+  (org-end-of-meta-data t)
+  (open-line 1)
+  (unless meow-insert-mode
+    (meow-insert-mode)))
 
 (defvar-keymap org-grader-mode-prefix-map
   :doc "Prefix keymap for `org-grader-mode'."
   "a" #'grading-add-student
   "e" #'grading-export-student
+  "i" #'grading-leave-comments
   "n" #'org-next-visible-heading
   "s" #'grading-set-score)
 
