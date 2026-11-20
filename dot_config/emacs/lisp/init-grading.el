@@ -78,9 +78,9 @@ Each criterion is a plist with keys :id, :title, :tags and :max."
             (nreverse result))))
 
 (defun grading--criterion-string (crit level)
-  "Return Org text for criterion CRIT as a heading at LEVEL, with empty score."
+  "Return Org text for criterion CRIT as a heading at LEVEL, with default score of 0."
   (let ((tags (plist-get crit :tags)))
-    (format "%s %s%s\n:PROPERTIES:\n:RUBRIC_ID: %s\n:SCORE: \n:MAX: %s\n:END:\n"
+    (format "%s %s%s\n:PROPERTIES:\n:RUBRIC_ID: %s\n:SCORE: 0 \n:MAX: %s\n:END:\n"
             (make-string level ?*)
             (plist-get crit :title)
             (if tags (format " :%s:" (string-join tags ":")) "")
@@ -524,7 +524,7 @@ Headings at `grading-student-level' with no rubric criteria beneath them
 (defun grading-set-score (score)
   "Set :SCORE: property for rubric item."
   (interactive (list (completing-read "Score: "
-                                      `("0" ,(org-entry-get nil "MAX"))
+                                      `(,(org-entry-get nil "MAX"))
                                       nil nil)))
   (org-set-property "SCORE" score))
 
