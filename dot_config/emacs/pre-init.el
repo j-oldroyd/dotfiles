@@ -1,4 +1,4 @@
-;;; pre-init.el --- Very early initializations -*- ;;; no-byte-compile: t; lexical-binding: t; -*-
+;;; pre-init.el --- Very early initializations -*- no-byte-compile: t; lexical-binding: t; -*-
 
 ;;; Commentary:
 
