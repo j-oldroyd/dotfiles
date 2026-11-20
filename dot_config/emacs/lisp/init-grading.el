@@ -535,25 +535,32 @@ Headings at `grading-student-level' with no rubric criteria beneath them
 
 (defvar-keymap org-grader-mode-map
   :doc "Keymap for `org-grader-mode'."
-  "C-c r" org-grader-mode-prefix-map)
+  "C-c a" org-grader-mode-prefix-map)
 
 (define-minor-mode org-grader-mode
-  "Toggle My Custom mode.
-Interactively with no argument, this command toggles the mode.
-A positive prefix argument enables the mode, any other prefix
-argument disables it."
-  ;; Initial value (nil = disabled by default)
+  "Toggle My Custom mode."
   :init-value nil
-  ;; Mode-line indicator (leading space is standard)
   :lighter " Grader"
-  ;; Keymap active when the mode is enabled
   :keymap org-grader-mode-map
-  ;; Scope (nil = buffer-local, t = global across all buffers)
   :global nil
-
-  ;; Body: executed whenever the mode is toggled on or off
-  )
-
+  (if org-grader-mode
+      (let* ((raw-leader (or (default-value 'meow-keypad-leader-dispatch)
+                             (alist-get 'leader (default-value 'meow-keymap-alist))))
+             (base-keymap (cond ((keymapp raw-leader) raw-leader)
+                                ((and (symbolp raw-leader) (boundp raw-leader))
+                                 (symbol-value raw-leader))
+                                (t (make-sparse-keymap))))
+             (overlay-map (make-sparse-keymap))
+             (local-leader (make-composed-keymap overlay-map base-keymap)))
+        (keymap-set overlay-map "a" org-grader-mode-prefix-map)
+        (if (default-value 'meow-keypad-leader-dispatch)
+            (setq-local meow-keypad-leader-dispatch local-leader)
+          (setq-local meow-keymap-alist
+                      (cons `(leader . ,local-leader)
+                            (assq-delete-all 'leader
+                                             (copy-alist (default-value 'meow-keymap-alist)))))))
+    (kill-local-variable 'meow-keypad-leader-dispatch)
+    (kill-local-variable 'meow-keymap-alist)))
 
 (provide 'init-grading)
 ;;; init-grading.el ends here
